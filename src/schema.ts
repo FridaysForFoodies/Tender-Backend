@@ -1,5 +1,5 @@
 import { buildSchema } from "type-graphql";
-import { ExampleResolver } from "./resolvers/ExampleResolver";
+import { ExampleResolver } from "./modules/example/ExampleResolver";
 import { GraphQLSchema } from "graphql";
 
 export default async function createSchema(): Promise<GraphQLSchema> {

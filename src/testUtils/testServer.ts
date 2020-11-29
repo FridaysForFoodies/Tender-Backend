@@ -3,7 +3,7 @@ import {
   createTestClient,
 } from "apollo-server-testing";
 import { ApolloServer } from "apollo-server-express";
-import createSchema from "../api/schema";
+import createSchema from "../schema";
 
 export default async function testServer(): Promise<ApolloServerTestClient> {
   const schema = await createSchema();

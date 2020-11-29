@@ -1,7 +1,7 @@
 import { ApolloServer } from "apollo-server-express";
 import * as Express from "express";
 import "reflect-metadata";
-import createSchema from "./api/schema";
+import createSchema from "./schema";
 
 const main = async () => {
   const schema = await createSchema();

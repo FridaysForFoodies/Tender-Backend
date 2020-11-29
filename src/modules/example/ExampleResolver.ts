@@ -1,5 +1,5 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import { Example } from "../types/Example";
+import { Example } from "../../model/Example";
 
 const exampleList: Example[] = [
   new Example(1, "Herr der Ringe", "Lorem ipsum dolor sit amet"),
