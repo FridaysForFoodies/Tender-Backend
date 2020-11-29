@@ -10,6 +10,11 @@ type Example {
   name: String!
 }
 
+type Mutation {
+  createCategory(description: String!, name: String!): Boolean!
+}
+
 type Query {
-  returnExample(id: String!): Example!
+  returnAllExamples: [Example!]!
+  returnExample(id: Float!): Example!
 }
