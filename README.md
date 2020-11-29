@@ -15,3 +15,4 @@
 - ESLint
 - Prettier
 - Husky
+- Travis CI
