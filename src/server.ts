@@ -20,5 +20,5 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  console.log(error, "erro");
+  console.log(error, "error");
 });
