@@ -5,4 +5,13 @@
 - NodeJS
 - TypeScript
 - Neo4J / MongoDB (TBD)
-- GraphQL
+- GraphQL / TypeGraphQL
+- Apollo Server
+- Express
+
+### Dev Tools
+- Jest
+- Apollo Server Testing
+- ESLint
+- Prettier
+- Husky
