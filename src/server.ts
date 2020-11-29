@@ -1,18 +1,11 @@
 import {ApolloServer} from "apollo-server-express";
 import * as Express from 'express';
 import "reflect-metadata";
-import {buildSchema} from "type-graphql";
-
-// resolvers
-import {ExampleResolver} from "./api/resolvers/ExampleResolver";
+import createSchema from "./api/schema";
 
 
 const main = async () => {
-    const schema = await buildSchema({
-        resolvers: [ExampleResolver],
-        emitSchemaFile: true,
-        validate: false,
-    });
+    const schema = await createSchema();
 
     const app = Express();
 
@@ -25,5 +18,5 @@ const main = async () => {
 };
 
 main().catch((error) => {
-    console.log(error, 'error');
+    console.log(error, 'erro');
 })

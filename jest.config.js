@@ -11,4 +11,5 @@ module.exports = {
     "tsx",
     "js",
   ],
+  setupFiles: ['./jest.setup-file.ts'],
 };
