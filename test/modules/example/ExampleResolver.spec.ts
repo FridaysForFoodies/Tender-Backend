@@ -1,4 +1,4 @@
-import testServer from "../../testUtils/testServer";
+import testServer from "../../__utils/testServer";
 
 let query;
 
