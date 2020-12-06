@@ -4,7 +4,6 @@ services:
 
   backend:
     build:
-      context: .
-      target: dev
+      target: build
     volumes:
       - .:/project/

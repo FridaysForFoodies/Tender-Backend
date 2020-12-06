@@ -1,12 +1,16 @@
 FROM node:erbium-alpine AS build
-COPY . /project/
 WORKDIR /project/
-RUN apk add git && npm install && npm run build-ts
+COPY package*.json ./
+RUN apk add git && npm install
+COPY ./ ./
+RUN npm run build-ts
+EXPOSE 3333
 ENTRYPOINT ["npm", "run", "watch"]
 
 FROM node:erbium-alpine
-RUN apk add git
-COPY --from=build /project/package.json /project/package-lock.json /
-RUN npm install --production
-COPY --from=build /project/build/ /build/
+WORKDIR /server/
+COPY --from=build /project/package*.json ./
+RUN apk add git && npm ci --only=production
+COPY --from=build /project/build/ ./build/
+EXPOSE 3333
 ENTRYPOINT ["npm", "start"]
