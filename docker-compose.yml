@@ -1,28 +1,28 @@
 version: "3.7"
 
 services:
-
   backend:
     build: .
     image: tender/backend:latest
     ports:
       - "3333:3333"
-#    depends_on:
-#      - db
+    depends_on:
+      - neo4j_db
     networks:
       - tender-net
 
-#  db:
-#    image: mongo
-#    ports:
-#      - "27017:27017"
-#    volumes:
-#      - db-data:/data/db
-#    networks:
-#      - tender-net
-#
-#volumes:
-#  db-data:
+  neo4j_db:
+    image: library/neo4j:latest
+    ports:
+      - "7687:7687"
+      - "7474:7474"
+    volumes:
+      - db-data:/data/db
+    networks:
+      - tender-net
+
+volumes:
+  db-data:
 
 networks:
   tender-net:
