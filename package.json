@@ -27,7 +27,8 @@
     "express": "^4.17.1",
     "graphql": "^15.4.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.1.1"
+    "type-graphql": "^1.1.1",
+    "typedi": "^0.8.0"
   },
   "devDependencies": {
     "@types/express": "github:types/express",
