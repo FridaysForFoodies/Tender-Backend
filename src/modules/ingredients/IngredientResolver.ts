@@ -16,4 +16,11 @@ export class IngredientResolver {
     const ingredients = await this.ingredientProvider.getAllWhere(i => i.name.indexOf(query) != -1);
     return ingredients.slice(0, count);
   }
+
+  @Query(() => [Ingredient])
+  async popularIngredients(
+    @Arg("count", { defaultValue: 5 }) count: number
+  ): Promise<Ingredient[]> {
+    return await this.ingredientProvider.getPopular(count);
+  }
 }

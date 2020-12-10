@@ -14,11 +14,15 @@ export class Ingredient {
   @Field()
   calories: number;
 
-  constructor(id: number, name: string, unit: Unit, calories: number) {
+  @Field()
+  searchCount: number;
+
+  constructor(id: number, name: string, unit: Unit, calories: number, searchCount: number) {
     this.id = id;
     this.name = name;
     this.unit = unit;
     this.calories = calories;
+    this.searchCount = searchCount;
   }
 }
 
