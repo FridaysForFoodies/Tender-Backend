@@ -1,5 +1,5 @@
-import { IngredientResolver } from "../../../src/modules/ingredients/IngredientResolver";
-import { ingredientProviderMock } from "../../__mocks__/IngredientProvider";
+import { IngredientResolver } from "../../../../src/modules/ingredients/IngredientResolver";
+import { ingredientProviderMock } from "../../../__mocks__/IngredientProvider";
 
 let ingredientResolver: IngredientResolver;
 

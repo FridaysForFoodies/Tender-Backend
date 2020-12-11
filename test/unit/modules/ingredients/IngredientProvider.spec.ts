@@ -1,5 +1,5 @@
-import { IngredientProvider } from "../../../src/modules/ingredients/IngredientProvider";
-import { Unit } from "../../../src/model/Ingredient";
+import { IngredientProvider } from "../../../../src/modules/ingredients/IngredientProvider";
+import { Unit } from "../../../../src/model/Ingredient";
 
 let ingredientProvider: IngredientProvider;
 
