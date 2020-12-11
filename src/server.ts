@@ -1,14 +1,25 @@
 import { ApolloServer } from "apollo-server-express";
+import * as neo4j from "neo4j-driver";
 import * as Express from "express";
+import * as dotenv from "dotenv";
 import "reflect-metadata";
 import createSchema from "./schema";
 
 const main = async () => {
-  const schema = await createSchema();
+  dotenv.config();
 
+  const schema = await createSchema();
   const app = Express();
 
-  const server = new ApolloServer({ schema });
+  const driver = neo4j.driver(
+    process.env.DATABASE_URL,
+    neo4j.auth.basic(
+      process.env.DATABASE_USERNAME,
+      process.env.DATABASE_PASSWORD
+    )
+  );
+
+  const server = new ApolloServer({ schema, context: driver });
   // @ts-ignore
   server.applyMiddleware({ app });
 
