@@ -11,6 +11,7 @@ const main = async () => {
   const app = Express();
 
   const server = new ApolloServer({ schema });
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   server.applyMiddleware({ app });
 

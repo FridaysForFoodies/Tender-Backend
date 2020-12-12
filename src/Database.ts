@@ -5,6 +5,7 @@ export const DATABASE = "database";
 
 export interface IDatabase {
   getSession(): Session
+  close(): Promise<void>
 }
 
 @Service(DATABASE)
@@ -23,5 +24,9 @@ export class Database implements IDatabase {
 
   getSession(): Session {
     return this.driver.session();
+  }
+
+  async close(): Promise<void> {
+    await this.driver.close();
   }
 }

@@ -5,10 +5,10 @@ import {
 import { ApolloServer } from "apollo-server-express";
 import createSchema from "../../src/schema";
 import * as dotenv from "dotenv";
-import * as neo4j from "neo4j-driver";
+import * as path from "path";
 
 export default async function testServer(): Promise<ApolloServerTestClient> {
-  dotenv.config();
+  dotenv.config({ path: path.resolve(process.cwd(), ".env.test") });
 
   const schema = await createSchema();
 
