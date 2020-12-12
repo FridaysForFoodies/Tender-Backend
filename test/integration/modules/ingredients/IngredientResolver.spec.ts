@@ -19,6 +19,7 @@ const ingredientSuggestionsCountQuery = `query {
 }`;
 
 beforeAll(async () => {
+  // Falls jemand hierfür noch ne bessere Lösung hat, feel free to edit
   jest.setTimeout(15000);
   console.log("Waiting for database...");
   await new Promise(r => setTimeout(r, 10000));
