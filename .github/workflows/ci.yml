@@ -28,6 +28,6 @@ jobs:
       - name: Build the stack
         run: docker-compose up -d
       - name: Test
-        run: docker exec -it tender-backend_backend_1 npm test
+        run: docker exec -i tender-backend_backend_1 npm test
         env:
           CI: true
