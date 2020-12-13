@@ -7,7 +7,7 @@ import { Record } from "neo4j-driver";
 export const INGREDIENT_PROVIDER = "ingredient-provider";
 
 export interface IIngredientProvider {
-  getAllWhereNameContains(filter: string): Promise<Ingredient[]>
+  getAllWhereNameContains(query: string, count: number): Promise<Ingredient[]>
   getPopular(count: number): Promise<Ingredient[]>
 }
 
@@ -30,14 +30,18 @@ export class IngredientProvider implements IIngredientProvider {
     );
   }
 
-  async getAllWhereNameContains(query: string): Promise<Ingredient[]> {
+  async getAllWhereNameContains(query: string, count: number): Promise<Ingredient[]> {
     const session = this.db.getSession();
     try {
       const result = await session.run(
         `MATCH (i:Ingredient)-[:USES]->(u) 
         WHERE i.name CONTAINS $query 
-        RETURN i, u`,
-        { query: query }
+        RETURN i, u
+        LIMIT toInteger($count)`,
+        {
+          query: query,
+          count: count
+        }
       );
       return result.records.map(r => IngredientProvider.recordToIngredient(r));
     } catch (e) {

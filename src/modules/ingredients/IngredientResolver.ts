@@ -12,8 +12,7 @@ export class IngredientResolver {
     @Arg("query") query: string,
     @Arg("count", {defaultValue: 5}) count: number
   ): Promise<Ingredient[]> {
-    const ingredients = await this.ingredientProvider.getAllWhereNameContains(query);
-    return ingredients.slice(0, count);
+    return await this.ingredientProvider.getAllWhereNameContains(query, count);
   }
 
   @Query(() => [Ingredient])

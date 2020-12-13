@@ -42,14 +42,14 @@ describe("All ingredients where name contains", () => {
     }]));
     const ingredientProvider = new IngredientProvider(new DatabaseMock({ runMock: runMock }));
 
-    expect(ingredientProvider.getAllWhereNameContains("")).resolves.toMatchObject([ingredient]);
+    expect(ingredientProvider.getAllWhereNameContains("", 0)).resolves.toMatchObject([ingredient]);
   });
 
   it("should close the database session", async () => {
     const closeMock = jest.fn();
     const ingredientProvider = new IngredientProvider(new DatabaseMock({ closeMock: closeMock }));
 
-    await ingredientProvider.getAllWhereNameContains("");
+    await ingredientProvider.getAllWhereNameContains("", 0);
 
     expect(closeMock.mock.calls).toHaveLength(1);
   });
