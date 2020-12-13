@@ -3,6 +3,7 @@ import * as Express from "express";
 import * as dotenv from "dotenv";
 import "reflect-metadata";
 import createSchema from "./schema";
+import { User } from "./model/User";
 
 const main = async () => {
   dotenv.config();
@@ -10,7 +11,16 @@ const main = async () => {
   const schema = await createSchema();
   const app = Express();
 
-  const server = new ApolloServer({ schema });
+  const server = new ApolloServer({
+    schema,
+    context: ({ req }) => {
+      const uuid = req.headers.authorization;
+      return {
+        user: new User(uuid),
+      };
+    },
+  });
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   server.applyMiddleware({ app });
