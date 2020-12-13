@@ -24,7 +24,7 @@ describe("All ingredients where name contains", () => {
     );
 
     const runMock = jest.fn().mockResolvedValue(mockResult([{
-      i: {
+      ingredient: {
         identity: int(ingredient.id),
         properties: {
           name: ingredient.name,
@@ -32,7 +32,7 @@ describe("All ingredients where name contains", () => {
           searchCount: int(ingredient.searchCount)
         }
       },
-      u: {
+      unit: {
         identity: int(ingredient.unit.id),
         properties: {
           name: ingredient.unit.name,
@@ -70,7 +70,7 @@ describe("Popular ingredients", () => {
     );
 
     const runMock = jest.fn().mockResolvedValue(mockResult([{
-      i: {
+      ingredient: {
         identity: int(ingredient.id),
         properties: {
           name: ingredient.name,
@@ -78,7 +78,7 @@ describe("Popular ingredients", () => {
           searchCount: int(ingredient.searchCount)
         }
       },
-      u: {
+      unit: {
         identity: int(ingredient.unit.id),
         properties: {
           name: ingredient.unit.name,
