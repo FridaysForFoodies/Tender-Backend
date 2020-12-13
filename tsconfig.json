@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./build",
-    "rootDir": "./src",
+    "rootDirs": ["./src", "./test"],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "sourceMap": true

@@ -1,0 +1,6 @@
+FROM neo4j:4.2
+ENV NEO4J_dbms_directories_data /data
+COPY test-db-entrypoint.sh test-db.dump /
+RUN chmod +x /test-db-entrypoint.sh
+ENTRYPOINT ["/sbin/tini", "-g", "--", "/test-db-entrypoint.sh"]
+CMD ["neo4j"]

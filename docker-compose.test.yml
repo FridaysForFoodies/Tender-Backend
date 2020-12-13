@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile.test
+
+  neo4j_db:
+    build:
+      dockerfile: Dockerfile.test-db
+      context: .
+    image: neo4j-test:latest
+    environment:
+      - NEO4J_AUTH=neo4j/test
+    volumes:
+      - db-test-data:/data
+
+volumes:
+  db-test-data:

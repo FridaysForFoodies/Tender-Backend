@@ -1,0 +1,6 @@
+FROM node:erbium-alpine
+WORKDIR /project/
+COPY package*.json ./
+RUN apk add git && npm install
+COPY ./ ./
+ENTRYPOINT ["tail", "-f", "/dev/null"]
