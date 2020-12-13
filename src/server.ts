@@ -1,14 +1,17 @@
 import { ApolloServer } from "apollo-server-express";
 import * as Express from "express";
+import * as dotenv from "dotenv";
 import "reflect-metadata";
 import createSchema from "./schema";
 
 const main = async () => {
-  const schema = await createSchema();
+  dotenv.config();
 
+  const schema = await createSchema();
   const app = Express();
 
   const server = new ApolloServer({ schema });
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   server.applyMiddleware({ app });
 

@@ -1,26 +1,40 @@
-import { Ingredient, Unit } from "../../model/Ingredient";
-import { Service } from "typedi";
+import { Ingredient } from "../../model/Ingredient";
+import { Inject, Service } from "typedi";
+import { DATABASE, IDatabase } from "../../Database";
+import { Unit } from "../../model/Unit";
 
 export const INGREDIENT_PROVIDER = "ingredient-provider";
 
 export interface IIngredientProvider {
-  getAllWhere(filter: (Ingredient) => boolean): Promise<Ingredient[]>
+  getAllWhereNameContains(filter: string): Promise<Ingredient[]>
   getPopular(count: number): Promise<Ingredient[]>
 }
 
 @Service(INGREDIENT_PROVIDER)
 export class IngredientProvider implements IIngredientProvider {
-  private readonly ingredients: Ingredient[] = [
-    new Ingredient(0, "Flour", Unit.GRAMS, 364, 152),
-    new Ingredient(1, "Water", Unit.LITRES, 0, 25),
-    new Ingredient(2, "Egg", Unit.PIECES, 155, 395),
-    new Ingredient(3, "Salt", Unit.TEASPOONS, 0, 12),
-    new Ingredient(4, "Bell Pepper", Unit.PIECES, 20, 492),
-    new Ingredient(5, "Black Olives", Unit.GRAMS, 115, 125)
-  ];
 
-  async getAllWhere(filter: (Ingredient) => boolean): Promise<Ingredient[]> {
-    return this.ingredients.filter(filter);
+  constructor(@Inject(DATABASE) private readonly db: IDatabase) { }
+
+  async getAllWhereNameContains(query: string): Promise<Ingredient[]> {
+    const session = this.db.getSession();
+    try {
+      const result = await session.run(
+        `MATCH (i:Ingredient)-[:USES]->(u) 
+        WHERE i.name CONTAINS $query 
+        RETURN i, u`,
+        { query: query }
+      );
+      return result.records.map(r => new Ingredient(
+        r.get("i").identity.toNumber(),
+        r.get("i").properties.name,
+        new Unit(r.get("u").identity.toNumber(), r.get("u").properties.name, r.get("u").properties.abbreviation),
+        r.get("i").properties.calories.toNumber()
+      ));
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      await session.close();
+    }
   }
 
   async getPopular(count: number): Promise<Ingredient[]> {

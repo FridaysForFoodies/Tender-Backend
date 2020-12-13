@@ -26,6 +26,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_DEV_PUBLISH_PROFILE }}
-          images:
-            ${{ env.CONTAINER_REGISTRY }}/tender-backend-dev:${{ github.sha }}
-            ${{ env.CONTAINER_REGISTRY }}/tender-backend-dev:latest
+          images: ${{ env.CONTAINER_REGISTRY }}/tender-backend-dev:latest

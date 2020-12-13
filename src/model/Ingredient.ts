@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
+import { Unit } from "./Unit";
 
 @ObjectType({ description: "A single ingredient for a recipe" })
 export class Ingredient {
@@ -24,11 +25,4 @@ export class Ingredient {
     this.calories = calories;
     this.searchCount = searchCount;
   }
-}
-
-export enum Unit {
-  GRAMS= "g",
-  LITRES = "l",
-  PIECES = "pcs",
-  TEASPOONS = "tsp"
 }
