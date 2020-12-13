@@ -17,8 +17,9 @@ describe("All ingredients where name contains", () => {
       new Unit(
         faker.random.number(),
         faker.random.word(),
-        faker.random.alpha({ count: 2})
+        faker.random.alpha({ count: 2 })
       ),
+      faker.random.number(),
       faker.random.number()
     );
 
@@ -27,7 +28,8 @@ describe("All ingredients where name contains", () => {
         identity: int(ingredient.id),
         properties: {
           name: ingredient.name,
-          calories: int(ingredient.calories)
+          calories: int(ingredient.calories),
+          searchCount: int(ingredient.searchCount)
         }
       },
       u: {
@@ -48,6 +50,52 @@ describe("All ingredients where name contains", () => {
     const ingredientProvider = new IngredientProvider(new DatabaseMock({ closeMock: closeMock }));
 
     await ingredientProvider.getAllWhereNameContains("");
+
+    expect(closeMock.mock.calls).toHaveLength(1);
+  });
+});
+
+describe("Popular ingredients", () => {
+  it("should return database result mapped to ingredient objects",  () => {
+    const ingredient = new Ingredient(
+      faker.random.number(),
+      faker.random.word(),
+      new Unit(
+        faker.random.number(),
+        faker.random.word(),
+        faker.random.alpha({ count: 2 })
+      ),
+      faker.random.number(),
+      faker.random.number()
+    );
+
+    const runMock = jest.fn().mockResolvedValue(mockResult([{
+      i: {
+        identity: int(ingredient.id),
+        properties: {
+          name: ingredient.name,
+          calories: int(ingredient.calories),
+          searchCount: int(ingredient.searchCount)
+        }
+      },
+      u: {
+        identity: int(ingredient.unit.id),
+        properties: {
+          name: ingredient.unit.name,
+          abbreviation: ingredient.unit.abbreviation
+        }
+      }
+    }]));
+    const ingredientProvider = new IngredientProvider(new DatabaseMock({ runMock: runMock }));
+
+    expect(ingredientProvider.getPopular(1)).resolves.toMatchObject([ingredient]);
+  });
+
+  it("should close the database session", async () => {
+    const closeMock = jest.fn();
+    const ingredientProvider = new IngredientProvider(new DatabaseMock({ closeMock: closeMock }));
+
+    await ingredientProvider.getPopular(1);
 
     expect(closeMock.mock.calls).toHaveLength(1);
   });

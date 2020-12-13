@@ -4,7 +4,8 @@ import { Unit } from "../../src/model/Unit";
 import * as faker from "faker";
 
 export const ingredientProviderMock = {
-  getAllWhereNameContains: jest.fn(() => new Promise((resolve) => resolve(generateTestData())))
+  getAllWhereNameContains: jest.fn(() => new Promise((resolve) => resolve(generateTestData()))),
+  getPopular: jest.fn(() => new Promise((resolve => resolve(generateTestData()))))
 } as IIngredientProvider;
 
 const generateTestData = () => {
@@ -17,7 +18,13 @@ const generateTestData = () => {
 
   const ingredients = [];
   for (let i = 0; i < 10; i++) {
-    ingredients.push(new Ingredient(faker.random.number(), faker.random.word(), units[faker.random.number(units.length)], faker.random.number()));
+    ingredients.push(new Ingredient(
+      faker.random.number(),
+      faker.random.word(),
+      units[faker.random.number(units.length)],
+      faker.random.number(),
+      faker.random.number()
+    ));
   }
   return ingredients;
 }
