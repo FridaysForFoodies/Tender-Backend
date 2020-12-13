@@ -18,15 +18,15 @@ export class IngredientProvider implements IIngredientProvider {
 
   private static recordToIngredient(record: Record): Ingredient {
     return new Ingredient(
-      record.get("i").identity.toNumber(),
-      record.get("i").properties.name,
+      record.get("ingredient").identity.toNumber(),
+      record.get("ingredient").properties.name,
       new Unit(
-        record.get("u").identity.toNumber(),
-        record.get("u").properties.name,
-        record.get("u").properties.abbreviation
+        record.get("unit").identity.toNumber(),
+        record.get("unit").properties.name,
+        record.get("unit").properties.abbreviation
       ),
-      record.get("i").properties.calories.toNumber(),
-      record.get("i").properties.searchCount.toNumber()
+      record.get("ingredient").properties.calories.toNumber(),
+      record.get("ingredient").properties.searchCount.toNumber()
     );
   }
 
@@ -34,9 +34,9 @@ export class IngredientProvider implements IIngredientProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        `MATCH (i:Ingredient)-[:USES]->(u) 
-        WHERE i.name CONTAINS $query 
-        RETURN i, u
+        `MATCH (ingredient:Ingredient)-[:USES]->(unit) 
+        WHERE ingredient.name CONTAINS $query 
+        RETURN ingredient, unit
         LIMIT toInteger($count)`,
         {
           query: query,
@@ -55,9 +55,9 @@ export class IngredientProvider implements IIngredientProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        `MATCH (i:Ingredient)-[:USES]->(u)
-        RETURN i, u
-        ORDER BY i.searchCount DESC
+        `MATCH (ingredient:Ingredient)-[:USES]->(unit)
+        RETURN ingredient, unit
+        ORDER BY ingredient.searchCount DESC
         LIMIT toInteger($count)`,
         { count: count }
       );
