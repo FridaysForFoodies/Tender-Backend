@@ -5,10 +5,9 @@ import {
 import { ApolloServer } from "apollo-server-express";
 import createSchema from "../../src/schema";
 import * as dotenv from "dotenv";
-import * as path from "path";
 
 export default async function testServer(): Promise<ApolloServerTestClient> {
-  dotenv.config({ path: path.resolve(process.cwd(), ".env.test") });
+  dotenv.config();
 
   const schema = await createSchema();
 

@@ -6,18 +6,12 @@ import * as uuid from "uuid";
 let query;
 
 const generateUserQuery = `query {
-  generateUser() {
+  generateUser {
     uuid
   }
 }`;
 
 beforeAll(async () => {
-  // Falls jemand hierfür noch ne bessere Lösung hat, feel free to edit
-  jest.setTimeout(15000);
-  console.log("Waiting for database...");
-  await new Promise((r) => setTimeout(r, 10000));
-  console.log("Done waiting!");
-
   query = (await testServer()).query;
 });
 
