@@ -12,9 +12,6 @@ services:
     image: neo4j-test:latest
     environment:
       - NEO4J_AUTH=neo4j/test
-      - DATABASE_URL=bolt://neo4j_db:7687
-      - DATABASE_USERNAME=neo4j
-      - DATABASE_PASSWORD=test
     volumes:
       - db-test-data:/data
 
