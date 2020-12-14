@@ -31,6 +31,3 @@ jobs:
         run: docker exec -i tender-backend_backend_1 npm test
         env:
           CI: true
-          DATABASE_URL: bolt://neo4j_db:7687
-          DATABASE_USERNAME: neo4j
-          DATABASE_PASSWORD: test
