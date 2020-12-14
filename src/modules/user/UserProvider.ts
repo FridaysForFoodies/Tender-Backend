@@ -1,17 +1,19 @@
 import { Inject, Service } from "typedi";
+const { AuthenticationError } = require("apollo-server-errors");
 import { DATABASE, IDatabase } from "../../Database";
+import { User } from "../../model/User";
 
 export const USER_PROVIDER = "user-provider";
 
 export interface IUserProvider {
-  containsUser(uuid: string): Promise<boolean>;
+  getUserByUUID(uuid: string): Promise<User>;
 }
 
 @Service(USER_PROVIDER)
 export class UserProvider implements IUserProvider {
   constructor(@Inject(DATABASE) private readonly db: IDatabase) {}
 
-  async containsUser(uuid: string): Promise<boolean> {
+  async getUserByUUID(uuid: string): Promise<User> {
     const session = this.db.getSession();
     try {
       const result = await session.run(
@@ -20,7 +22,11 @@ export class UserProvider implements IUserProvider {
           username: uuid,
         }
       );
-      return result.records.find((record, index) => record.has("uuid")) != null;
+      const [user] = await result.records.map((record) => {
+        return record.get("user") as User;
+      });
+
+      return user;
     } catch (e) {
       return Promise.reject(e);
     } finally {

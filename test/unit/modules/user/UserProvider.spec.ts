@@ -1,0 +1,35 @@
+import { DatabaseMock, mockResult } from "../../../__mocks__/Database";
+import { v4 as uuidv4 } from "uuid";
+import * as faker from "faker";
+import { UserProvider } from "../../../../src/modules/user/UserProvider";
+import { User } from "../../../../src/model/User";
+
+let mock_uuid;
+
+beforeAll(() => {
+  faker.seed(1337);
+
+  mock_uuid = uuidv4();
+});
+
+describe("Get User from Database", () => {
+  it("should return User from Database based on its UUID", async () => {
+    const user = new User(mock_uuid);
+
+    const runMock = jest.fn().mockResolvedValue(
+      mockResult([
+        {
+          user: {
+            uuid: user.uuid,
+          },
+        },
+      ])
+    );
+    const userProvider = new UserProvider(
+      new DatabaseMock({ runMock: runMock })
+    );
+    const result = userProvider.getUserByUUID(mock_uuid);
+
+    await expect(result).resolves.toMatchObject(user);
+  });
+});
