@@ -30,6 +30,8 @@ describe("QUERY ingredient suggestions", () => {
   it("should return ingredients containing the query", async () => {
     const result = await query({ query: ingredientSuggestionsQuery });
 
+    console.log(result);
+
     result.data.ingredientSuggestions.forEach((i) =>
       expect(i.name).toContain(queryString)
     );
@@ -38,11 +40,15 @@ describe("QUERY ingredient suggestions", () => {
   it("should return no more than five ingredients", async () => {
     const result = await query({ query: ingredientSuggestionsQuery });
 
+    console.log(result);
+
     expect(result.data.ingredientSuggestions.length).toBeLessThanOrEqual(5);
   });
 
   it("should return no more than the requested number of ingredients", async () => {
     const result = await query({ query: ingredientSuggestionsCountQuery });
+
+    console.log(result);
 
     expect(result.data.ingredientSuggestions.length).toBeLessThanOrEqual(count);
   });
