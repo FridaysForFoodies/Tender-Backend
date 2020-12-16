@@ -13,22 +13,34 @@ beforeAll(() => {
 });
 
 describe("Get User from Database", () => {
-  it("should return User from Database based on its UUID", async () => {
-    const user = new User(mock_uuid);
+  let user: User;
+  let userProvider: UserProvider;
+
+  beforeEach(() => {
+    user = new User(mock_uuid);
 
     const runMock = jest.fn().mockResolvedValue(
       mockResult([
         {
           user: {
-            uuid: user.uuid,
+            properties: {
+              uuid: user.uuid,
+            },
           },
         },
       ])
     );
-    const userProvider = new UserProvider(
-      new DatabaseMock({ runMock: runMock })
-    );
+    userProvider = new UserProvider(new DatabaseMock({ runMock: runMock }));
+  });
+
+  it("should return User from Database based on its UUID", async () => {
     const result = userProvider.getUserByUUID(mock_uuid);
+
+    await expect(result).resolves.toMatchObject(user);
+  });
+
+  it("should create User with UUID and return it from Database", async () => {
+    const result = userProvider.createUserWithUUID(mock_uuid);
 
     await expect(result).resolves.toMatchObject(user);
   });

@@ -12,7 +12,6 @@ export class UserResolver {
 
   @Query(() => User, { nullable: false })
   async generateUser(): Promise<User> {
-    const newUuid = uuidv4();
-    return new User(newUuid);
+    return await this.userProvider.createUserWithUUID(uuidv4());
   }
 }
