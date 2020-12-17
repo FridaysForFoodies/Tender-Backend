@@ -14,21 +14,21 @@ const exampleList: Example[] = [
 
 @Resolver()
 export class ExampleResolver {
-  @Query((_returns) => Example, { nullable: false })
-  async returnExample(@Arg("id") id: number) {
+  @Query(() => Example, { nullable: false })
+  async returnExample(@Arg("id") id: number): Promise<Example> {
     return exampleList.find((value) => value.id == id);
   }
 
   @Query(() => [Example])
-  async returnAllExamples() {
+  async returnAllExamples(): Promise<Example[]> {
     return exampleList;
   }
 
   @Mutation(() => Boolean)
   async createCategory(
-    @Arg("name") name: String,
-    @Arg("description") description: String
-  ) {
+    @Arg("name") name: string,
+    @Arg("description") description: string
+  ): Promise<boolean> {
     const lastItem = exampleList.reduce((previousValue, currentValue) =>
       previousValue.id < currentValue.id ? currentValue : previousValue
     );

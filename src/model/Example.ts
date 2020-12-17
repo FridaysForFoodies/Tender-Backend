@@ -2,7 +2,7 @@ import { ObjectType, Field, ID } from "type-graphql";
 
 @ObjectType({ description: "The Example model" })
 export class Example {
-  constructor(id: number, name: String, description: String) {
+  constructor(id: number, name: string, description: string) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -12,8 +12,8 @@ export class Example {
   id: number;
 
   @Field()
-  name: String;
+  name: string;
 
   @Field()
-  description: String;
+  description: string;
 }

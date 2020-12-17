@@ -9,7 +9,7 @@
     "serve": "node build/server.js",
     "build-ts": "tsc",
     "watch": "tsc-watch --onSuccess \"npm start\"",
-    "lint": "eslint --config .eslintrc.json"
+    "lint": "eslint --config .eslintrc.json \"src/**\" \"test/**\""
   },
   "repository": {
     "type": "git",
