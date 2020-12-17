@@ -31,7 +31,8 @@
     "neo4j-driver": "^4.2.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
-    "typedi": "^0.8.0"
+    "typedi": "^0.8.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/express": "github:types/express",

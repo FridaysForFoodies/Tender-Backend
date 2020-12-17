@@ -12,21 +12,25 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm install
-    - run: npm run lint
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm install
+      - run: npm run lint
+        env:
+          CI: true
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
+      - name: Sleep until Container Started
+        uses: jakejarvis/wait-action@master
+        with:
+          time: "30s"
       - name: Test
         run: docker exec -i tender-backend_backend_1 npm test
         env:

@@ -28,6 +28,7 @@ type Mutation {
 }
 
 type Query {
+  generateUser: User!
   ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
   popularIngredients(count: Float = 5): [Ingredient!]!
   returnAllExamples: [Example!]!
@@ -43,4 +44,8 @@ type Unit {
   """
   ID: Float!
   name: String!
+}
+
+type User {
+  uuid: ID!
 }

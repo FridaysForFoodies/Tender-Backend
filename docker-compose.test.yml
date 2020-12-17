@@ -4,6 +4,8 @@ services:
   backend:
     build:
       dockerfile: Dockerfile.test
+    depends_on:
+      - neo4j_db
 
   neo4j_db:
     build:
