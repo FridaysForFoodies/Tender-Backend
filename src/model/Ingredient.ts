@@ -18,7 +18,13 @@ export class Ingredient {
   @Field()
   searchCount: number;
 
-  constructor(id: number, name: string, unit: Unit, calories: number, searchCount: number) {
+  constructor(
+    id: number,
+    name: string,
+    unit: Unit,
+    calories: number,
+    searchCount: number
+  ) {
     this.id = id;
     this.name = name;
     this.unit = unit;

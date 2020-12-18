@@ -64,7 +64,9 @@ describe("QUERY popular ingredients", () => {
 
     const ingredients = result.data.popularIngredients;
     for (let i = 1; i < ingredients.length; i++) {
-      expect(ingredients[i].searchCount).toBeLessThanOrEqual(ingredients[i - 1].searchCount);
+      expect(ingredients[i].searchCount).toBeLessThanOrEqual(
+        ingredients[i - 1].searchCount
+      );
     }
   });
 

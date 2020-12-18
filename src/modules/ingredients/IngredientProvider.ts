@@ -7,14 +7,13 @@ import { Record } from "neo4j-driver";
 export const INGREDIENT_PROVIDER = "ingredient-provider";
 
 export interface IIngredientProvider {
-  getAllWhereNameContains(query: string, count: number): Promise<Ingredient[]>
-  getPopular(count: number): Promise<Ingredient[]>
+  getAllWhereNameContains(query: string, count: number): Promise<Ingredient[]>;
+  getPopular(count: number): Promise<Ingredient[]>;
 }
 
 @Service(INGREDIENT_PROVIDER)
 export class IngredientProvider implements IIngredientProvider {
-
-  constructor(@Inject(DATABASE) private readonly db: IDatabase) { }
+  constructor(@Inject(DATABASE) private readonly db: IDatabase) {}
 
   private static recordToIngredient(record: Record): Ingredient {
     return new Ingredient(
@@ -30,7 +29,10 @@ export class IngredientProvider implements IIngredientProvider {
     );
   }
 
-  async getAllWhereNameContains(query: string, count: number): Promise<Ingredient[]> {
+  async getAllWhereNameContains(
+    query: string,
+    count: number
+  ): Promise<Ingredient[]> {
     const session = this.db.getSession();
     try {
       const result = await session.run(
@@ -40,10 +42,12 @@ export class IngredientProvider implements IIngredientProvider {
         LIMIT toInteger($count)`,
         {
           query: query,
-          count: count
+          count: count,
         }
       );
-      return result.records.map(r => IngredientProvider.recordToIngredient(r));
+      return result.records.map((r) =>
+        IngredientProvider.recordToIngredient(r)
+      );
     } catch (e) {
       return Promise.reject(e);
     } finally {
@@ -61,7 +65,9 @@ export class IngredientProvider implements IIngredientProvider {
         LIMIT toInteger($count)`,
         { count: count }
       );
-      return result.records.map(r => IngredientProvider.recordToIngredient(r));
+      return result.records.map((r) =>
+        IngredientProvider.recordToIngredient(r)
+      );
     } catch (e) {
       return Promise.reject(e);
     } finally {

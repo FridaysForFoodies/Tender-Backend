@@ -25,14 +25,31 @@ type Ingredient {
 
 type Mutation {
   createCategory(description: String!, name: String!): Boolean!
+  setRecipePreferencesForUser(preferences: RecipePreferencesInput!): RecipePreferences!
 }
 
 type Query {
   generateUser: User!
   ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
   popularIngredients(count: Float = 5): [Ingredient!]!
+  recipePreferencesForUser: RecipePreferences!
   returnAllExamples: [Example!]!
   returnExample(id: Float!): Example!
+}
+
+type RecipePreferences {
+  dairy: Boolean!
+  gluten: Boolean!
+  user: User!
+  vegan: Boolean!
+  vegetarian: Boolean!
+}
+
+input RecipePreferencesInput {
+  dairy: Boolean!
+  gluten: Boolean!
+  vegan: Boolean!
+  vegetarian: Boolean!
 }
 
 """The unit for ingredient amounts"""
