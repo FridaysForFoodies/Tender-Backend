@@ -12,7 +12,6 @@ import {
   UserProvider,
 } from "../../../../src/modules/user/UserProvider";
 import { RecipePreferences } from "../../../../src/model/RecipePreferences";
-import mock = jest.mock;
 
 let query;
 let mutation;
@@ -109,7 +108,7 @@ describe("MUTATION for RecipePreferences", () => {
     );
   });
 
-  it("should set RecipePreferences to new value and retrun it", async () => {
+  it("should set RecipePreferences to new value and return it", async () => {
     const result = await mutation({
       mutation: setRecipePreferencesMutation,
       variables: {
