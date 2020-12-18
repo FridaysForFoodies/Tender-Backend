@@ -2,10 +2,10 @@ import { Field, ID, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class User {
-  @Field((type) => ID)
-  uuid: String;
+  @Field(() => ID)
+  uuid: string;
 
-  constructor(uuid: String) {
+  constructor(uuid: string) {
     this.uuid = uuid;
   }
 }
