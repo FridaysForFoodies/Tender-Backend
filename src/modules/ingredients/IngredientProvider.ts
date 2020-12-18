@@ -18,7 +18,8 @@ export class IngredientProvider implements IIngredientProvider {
     return new Ingredient(
       record.get("ingredient").properties.ingredientId,
       record.get("ingredient").properties.name,
-      record.get("ingredient").properties.imagePath
+      record.get("ingredient").properties.imagePath,
+      (record.get("ingredient").properties.searchCount.toInteger() || 0)
     );
   }
 

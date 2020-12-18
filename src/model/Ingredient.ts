@@ -11,13 +11,18 @@ export class Ingredient {
   @Field()
   imagePath: string;
 
+  @Field()
+  searchCount: number;
+
   constructor(
     id: string,
     name: string,
-    imagePath: string
+    imagePath: string,
+    searchCount: number
   ) {
     this.id = id;
     this.name = name;
     this.imagePath = imagePath;
+    this.searchCount = searchCount;
   }
 }
