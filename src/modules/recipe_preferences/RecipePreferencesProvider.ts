@@ -22,7 +22,7 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        "MATCH (user:User { uuid: $userId })" +
+        "MATCH (user:User { uuid: $userId }) \n" +
           "MATCH (user)-[:HAS_PREF]->(prefs) RETURN prefs",
         {
           userId: user.uuid,
@@ -43,11 +43,11 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        "MATCH (user:User { uuid: $userId })" +
-          "OPTIONAL MATCH (user)-[r:HAS_PREF]->()" +
-          "MERGE (prefs:RecipePrefs {dairy: $dairy, gluten: $gluten, vegetarian: $vegetarian, vegan: $vegan})" +
-          "CREATE (user)-[:HAS_PREF]->(prefs)" +
-          "DELETE r" +
+        "MATCH (user:User { uuid: $userId }) \n" +
+          "OPTIONAL MATCH (user)-[r:HAS_PREF]->() \n" +
+          "MERGE (prefs:RecipePrefs {dairy: $dairy, gluten: $gluten, vegetarian: $vegetarian, vegan: $vegan}) \n" +
+          "CREATE (user)-[:HAS_PREF]->(prefs) \n" +
+          "DELETE r \n" +
           "RETURN prefs",
         {
           userId: user.uuid,

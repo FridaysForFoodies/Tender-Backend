@@ -1,4 +1,4 @@
-import { ArgsType, Field, InputType } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class RecipePreferencesInput {
