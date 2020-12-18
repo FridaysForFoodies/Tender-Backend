@@ -8,7 +8,7 @@ import * as dotenv from "dotenv";
 import * as path from "path";
 import { GraphQLServerOptions } from "apollo-server-core/src/graphqlOptions";
 
-export function loadConfig() {
+export function loadConfig(): void {
   if (
     process.env.DOTENV_CONFIG_LOCAL !== undefined &&
     process.env.DOTENV_CONFIG_LOCAL
@@ -20,7 +20,7 @@ export function loadConfig() {
 }
 
 export default async function testServer(
-  requestOptions?: Partial<GraphQLServerOptions<any>>
+  requestOptions?: Partial<GraphQLServerOptions<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
 ): Promise<ApolloServerTestClient> {
   loadConfig();
 

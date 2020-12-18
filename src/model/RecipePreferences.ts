@@ -1,9 +1,9 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
 import { User } from "./User";
 
 @ObjectType()
 export class RecipePreferences {
-  @Field((type) => User)
+  @Field(() => User)
   user: User;
 
   @Field()
