@@ -1,34 +1,23 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { Unit } from "./Unit";
 
 @ObjectType({ description: "A single ingredient for a recipe" })
 export class Ingredient {
   @Field(ID)
-  id: number;
+  id: string;
 
   @Field()
   name: string;
 
   @Field()
-  unit: Unit;
-
-  @Field()
-  calories: number;
-
-  @Field()
-  searchCount: number;
+  imagePath: string;
 
   constructor(
-    id: number,
+    id: string,
     name: string,
-    unit: Unit,
-    calories: number,
-    searchCount: number
+    imagePath: string
   ) {
     this.id = id;
     this.name = name;
-    this.unit = unit;
-    this.calories = calories;
-    this.searchCount = searchCount;
+    this.imagePath = imagePath;
   }
 }
