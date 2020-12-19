@@ -1,7 +1,6 @@
 import { Ingredient } from "../../model/Ingredient";
 import { Inject, Service } from "typedi";
 import { DATABASE, IDatabase } from "../../Database";
-import { Unit } from "../../model/Unit";
 import { Record } from "neo4j-driver";
 
 export const INGREDIENT_PROVIDER = "ingredient-provider";
@@ -17,15 +16,10 @@ export class IngredientProvider implements IIngredientProvider {
 
   private static recordToIngredient(record: Record): Ingredient {
     return new Ingredient(
-      record.get("ingredient").identity.toNumber(),
+      record.get("ingredient").properties.ingredientId,
       record.get("ingredient").properties.name,
-      new Unit(
-        record.get("unit").identity.toNumber(),
-        record.get("unit").properties.name,
-        record.get("unit").properties.abbreviation
-      ),
-      record.get("ingredient").properties.calories.toNumber(),
-      record.get("ingredient").properties.searchCount.toNumber()
+      record.get("ingredient").properties.imagePath,
+      (record.get("ingredient").properties.searchCount?.toInteger() || 0)
     );
   }
 
@@ -36,9 +30,9 @@ export class IngredientProvider implements IIngredientProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        `MATCH (ingredient:Ingredient)-[:USES]->(unit) 
+        `MATCH (ingredient:Ingredient)
         WHERE ingredient.name CONTAINS $query 
-        RETURN ingredient, unit
+        RETURN ingredient
         LIMIT toInteger($count)`,
         {
           query: query,
@@ -59,8 +53,8 @@ export class IngredientProvider implements IIngredientProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        `MATCH (ingredient:Ingredient)-[:USES]->(unit)
-        RETURN ingredient, unit
+        `MATCH (ingredient:Ingredient)
+        RETURN ingredient
         ORDER BY ingredient.searchCount DESC
         LIMIT toInteger($count)`,
         { count: count }

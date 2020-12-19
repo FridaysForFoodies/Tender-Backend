@@ -1,9 +1,32 @@
 import { IngredientProvider } from "../../../../src/modules/ingredients/IngredientProvider";
 import { DatabaseMock, mockResult } from "../../../__mocks__/Database";
-import { int } from "neo4j-driver";
+import { int, Result } from "neo4j-driver";
 import { Ingredient } from "../../../../src/model/Ingredient";
-import { Unit } from "../../../../src/model/Unit";
 import * as faker from "faker";
+
+function generateRandomIngredient(): Ingredient {
+  return new Ingredient(
+    faker.random.alphaNumeric(24),
+    faker.random.word(),
+    faker.system.filePath(),
+    faker.random.number()
+  );
+}
+
+function mockIngredientResult(ingredient: Ingredient): Result {
+  return mockResult([
+    {
+      ingredient: {
+        properties: {
+          ingredientId: ingredient.id,
+          name: ingredient.name,
+          imagePath: ingredient.imagePath,
+          searchCount: int(ingredient.searchCount),
+        },
+      },
+    },
+  ]);
+}
 
 beforeAll(() => {
   faker.seed(1337);
@@ -11,39 +34,9 @@ beforeAll(() => {
 
 describe("All ingredients where name contains", () => {
   it("should return database result mapped to ingredient objects", () => {
-    const ingredient = new Ingredient(
-      faker.random.number(),
-      faker.random.word(),
-      new Unit(
-        faker.random.number(),
-        faker.random.word(),
-        faker.random.alpha({ count: 2 })
-      ),
-      faker.random.number(),
-      faker.random.number()
-    );
+    const ingredient = generateRandomIngredient();
 
-    const runMock = jest.fn().mockResolvedValue(
-      mockResult([
-        {
-          ingredient: {
-            identity: int(ingredient.id),
-            properties: {
-              name: ingredient.name,
-              calories: int(ingredient.calories),
-              searchCount: int(ingredient.searchCount),
-            },
-          },
-          unit: {
-            identity: int(ingredient.unit.id),
-            properties: {
-              name: ingredient.unit.name,
-              abbreviation: ingredient.unit.abbreviation,
-            },
-          },
-        },
-      ])
-    );
+    const runMock = jest.fn().mockResolvedValue(mockIngredientResult(ingredient));
     const ingredientProvider = new IngredientProvider(
       new DatabaseMock({ runMock: runMock })
     );
@@ -67,39 +60,9 @@ describe("All ingredients where name contains", () => {
 
 describe("Popular ingredients", () => {
   it("should return database result mapped to ingredient objects", () => {
-    const ingredient = new Ingredient(
-      faker.random.number(),
-      faker.random.word(),
-      new Unit(
-        faker.random.number(),
-        faker.random.word(),
-        faker.random.alpha({ count: 2 })
-      ),
-      faker.random.number(),
-      faker.random.number()
-    );
+    const ingredient = generateRandomIngredient();
 
-    const runMock = jest.fn().mockResolvedValue(
-      mockResult([
-        {
-          ingredient: {
-            identity: int(ingredient.id),
-            properties: {
-              name: ingredient.name,
-              calories: int(ingredient.calories),
-              searchCount: int(ingredient.searchCount),
-            },
-          },
-          unit: {
-            identity: int(ingredient.unit.id),
-            properties: {
-              name: ingredient.unit.name,
-              abbreviation: ingredient.unit.abbreviation,
-            },
-          },
-        },
-      ])
-    );
+    const runMock = jest.fn().mockResolvedValue(mockIngredientResult(ingredient));
     const ingredientProvider = new IngredientProvider(
       new DatabaseMock({ runMock: runMock })
     );
