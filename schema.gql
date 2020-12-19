@@ -26,6 +26,7 @@ type Query {
 }
 
 type RecipePreferences {
+  cookingTime: Int!
   dairy: Boolean!
   gluten: Boolean!
   user: User!
@@ -34,6 +35,7 @@ type RecipePreferences {
 }
 
 input RecipePreferencesInput {
+  cookingTime: Int!
   dairy: Boolean!
   gluten: Boolean!
   vegan: Boolean!

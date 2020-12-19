@@ -26,11 +26,18 @@ export class RecipePreferencesResolver {
   @Mutation(() => RecipePreferences)
   async setRecipePreferencesForUser(
     @Arg("preferences")
-    { dairy, gluten, vegan, vegetarian }: RecipePreferencesInput,
+    { dairy, gluten, vegan, vegetarian, cookingTime }: RecipePreferencesInput,
     @CurrentUser() user: User
   ): Promise<RecipePreferences> {
     return await this.recipePreferencesProvider.setRecipePreferences(
-      new RecipePreferences(user, vegan, vegetarian, gluten, dairy),
+      new RecipePreferences(
+        user,
+        vegan,
+        vegetarian,
+        gluten,
+        dairy,
+        cookingTime
+      ),
       user
     );
   }

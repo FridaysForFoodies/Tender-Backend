@@ -2,6 +2,7 @@ import testServer, { loadConfig } from "../../../__utils/testServer";
 import { Container } from "typedi";
 import { DATABASE, IDatabase } from "../../../../src/Database";
 import { v4 as uuidv4 } from "uuid";
+import * as faker from "faker";
 import { User } from "../../../../src/model/User";
 import {
   RECIPE_PREFERENCES_PROVIDER,
@@ -23,6 +24,7 @@ const recipePreferencesForUserQuery = `query {
     vegetarian
     gluten
     dairy
+    cookingTime
   }
 }`;
 
@@ -32,10 +34,23 @@ const setRecipePreferencesMutation = `mutation($prefs: RecipePreferencesInput!) 
     vegetarian
     gluten
     dairy
+    cookingTime
   }
 }`;
 
+function mockRecipePreferences(user: User): RecipePreferences {
+  return new RecipePreferences(
+    user,
+    faker.random.boolean(),
+    faker.random.boolean(),
+    faker.random.boolean(),
+    faker.random.boolean(),
+    faker.random.number(60)
+  );
+}
+
 beforeAll(async () => {
+  faker.seed(1337);
   loadConfig();
 
   const userProvider = Container.get(USER_PROVIDER) as UserProvider;
@@ -65,7 +80,7 @@ describe("QUERY get RecipePreferences", () => {
     ) as RecipePreferencesProvider;
 
     mock_preferences = await recipePrefProvider.setRecipePreferences(
-      new RecipePreferences(mock_user1, true, false, false, true),
+      mockRecipePreferences(mock_user1),
       mock_user1
     );
   });
@@ -80,6 +95,7 @@ describe("QUERY get RecipePreferences", () => {
           gluten: mock_preferences.gluten,
           vegan: mock_preferences.vegan,
           vegetarian: mock_preferences.vegetarian,
+          cookingTime: mock_preferences.cookingTime,
         },
       },
     });
@@ -95,17 +111,11 @@ describe("MUTATION for RecipePreferences", () => {
     ) as RecipePreferencesProvider;
 
     await recipePrefProvider.setRecipePreferences(
-      new RecipePreferences(mock_user1, true, false, false, true),
+      mockRecipePreferences(mock_user1),
       mock_user1
     );
 
-    mock_preferences = new RecipePreferences(
-      mock_user1,
-      false,
-      false,
-      false,
-      false
-    );
+    mock_preferences = mockRecipePreferences(mock_user1);
   });
 
   it("should set RecipePreferences to new value and return it", async () => {
@@ -117,6 +127,7 @@ describe("MUTATION for RecipePreferences", () => {
           gluten: mock_preferences.gluten,
           vegan: mock_preferences.vegan,
           vegetarian: mock_preferences.vegetarian,
+          cookingTime: mock_preferences.cookingTime,
         },
       },
     });
@@ -128,6 +139,7 @@ describe("MUTATION for RecipePreferences", () => {
           gluten: mock_preferences.gluten,
           vegan: mock_preferences.vegan,
           vegetarian: mock_preferences.vegetarian,
+          cookingTime: mock_preferences.cookingTime,
         },
       },
     });

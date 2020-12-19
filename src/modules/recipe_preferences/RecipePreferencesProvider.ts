@@ -45,7 +45,7 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
       const result = await session.run(
         "MATCH (user:User { uuid: $userId }) \n" +
           "OPTIONAL MATCH (user)-[r:HAS_PREF]->() \n" +
-          "MERGE (prefs:RecipePrefs {dairy: $dairy, gluten: $gluten, vegetarian: $vegetarian, vegan: $vegan}) \n" +
+          "MERGE (prefs:RecipePrefs {dairy: $dairy, gluten: $gluten, vegetarian: $vegetarian, vegan: $vegan, cookingTime: $cookingTime}) \n" +
           "CREATE (user)-[:HAS_PREF]->(prefs) \n" +
           "DELETE r \n" +
           "RETURN prefs",
@@ -55,6 +55,7 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
           vegetarian: pref.vegetarian,
           gluten: pref.gluten,
           dairy: pref.dairy,
+          cookingTime: pref.cookingTime,
         }
       );
 
@@ -77,7 +78,8 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
         properties.vegan,
         properties.vegetarian,
         properties.gluten,
-        properties.dairy
+        properties.dairy,
+        properties.cookingTime
       );
     });
 
