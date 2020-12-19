@@ -1,4 +1,4 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, Int } from "type-graphql";
 
 @InputType()
 export class RecipePreferencesInput {
@@ -14,15 +14,20 @@ export class RecipePreferencesInput {
   @Field()
   dairy: boolean;
 
+  @Field(() => Int)
+  cookingTime: number;
+
   constructor(
     vegan: boolean,
     vegetarian: boolean,
     gluten: boolean,
-    dairy: boolean
+    dairy: boolean,
+    cookingTime: number
   ) {
     this.vegan = vegan;
     this.vegetarian = vegetarian;
     this.gluten = gluten;
     this.dairy = dairy;
+    this.cookingTime = cookingTime;
   }
 }

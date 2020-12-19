@@ -3,13 +3,6 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-"""The Example model"""
-type Example {
-  description: String!
-  id: ID!
-  name: String!
-}
-
 """A single ingredient for a recipe"""
 type Ingredient {
   calories: Float!
@@ -24,7 +17,6 @@ type Ingredient {
 }
 
 type Mutation {
-  createCategory(description: String!, name: String!): Boolean!
   setRecipePreferencesForUser(preferences: RecipePreferencesInput!): RecipePreferences!
 }
 
@@ -33,11 +25,10 @@ type Query {
   ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
   popularIngredients(count: Float = 5): [Ingredient!]!
   recipePreferencesForUser: RecipePreferences!
-  returnAllExamples: [Example!]!
-  returnExample(id: Float!): Example!
 }
 
 type RecipePreferences {
+  cookingTime: Int!
   dairy: Boolean!
   gluten: Boolean!
   user: User!
@@ -46,6 +37,7 @@ type RecipePreferences {
 }
 
 input RecipePreferencesInput {
+  cookingTime: Int!
   dairy: Boolean!
   gluten: Boolean!
   vegan: Boolean!

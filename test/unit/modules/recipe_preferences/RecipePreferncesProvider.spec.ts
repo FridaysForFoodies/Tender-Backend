@@ -13,10 +13,11 @@ beforeAll(() => {
   user = new User("mock_uuid");
   mock_recipePreferences = new RecipePreferences(
     user,
-    true,
-    false,
-    true,
-    false
+    faker.random.boolean(),
+    faker.random.boolean(),
+    faker.random.boolean(),
+    faker.random.boolean(),
+    faker.random.number(60)
   );
 });
 
@@ -33,6 +34,7 @@ describe("Get Recipe Prefernces from Database", () => {
               vegetarian: mock_recipePreferences.vegetarian,
               gluten: mock_recipePreferences.gluten,
               dairy: mock_recipePreferences.dairy,
+              cookingTime: mock_recipePreferences.cookingTime,
             },
           },
         },
