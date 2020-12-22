@@ -2,9 +2,9 @@ import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class SearchOptionsInput {
-  @Field()
+  @Field(() => [String])
   ingredients: [string];
 
-  @Field()
+  @Field(() => [String])
   tags: [string];
 }

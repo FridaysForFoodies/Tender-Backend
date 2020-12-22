@@ -1,10 +1,11 @@
-import { Arg, Query, Resolver } from "type-graphql";
+import { Arg, Args, Query, Resolver } from "type-graphql";
 import { Inject } from "typedi";
 import { IRecipeProvider, RECIPE_PROVIDER } from "./RecipeProvider";
 import { Recipe } from "../../model/Recipe";
 import CurrentUser from "../../decorator/current_user";
 import { User } from "../../model/User";
 import { SearchOptionsInput } from "./SearchOptionsInput";
+import { SearchRecipesArgs } from "./SearchRecipesArgs";
 
 @Resolver(RecipeResolver)
 export class RecipeResolver {
@@ -15,8 +16,8 @@ export class RecipeResolver {
   @Query(() => [Recipe])
   async searchForRecipes(
     @CurrentUser() user: User,
-    @Arg("searchOptions") { ingredients, tags }: SearchOptionsInput
+    @Args() { take, skip, searchOptions }: SearchRecipesArgs
   ): Promise<Recipe[]> {
-    return this.recipeProvider._mock_getRecipes(user);
+    return this.recipeProvider._mock_getRecipes(user, take, skip);
   }
 }

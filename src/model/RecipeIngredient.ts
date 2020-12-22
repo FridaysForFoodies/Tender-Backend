@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 import { Ingredient } from "./Ingredient";
 
 @ObjectType()
@@ -12,7 +12,7 @@ export class RecipeIngredient {
   @Field()
   unit: string;
 
-  @Field()
+  @Field(() => Int)
   yields: number;
 
   constructor(

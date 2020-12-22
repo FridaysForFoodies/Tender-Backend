@@ -1,6 +1,7 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import { InstructionStep } from "./InstructionStep";
 import { RecipeIngredient } from "./RecipeIngredient";
+import { Ingredient } from "./Ingredient";
 
 @ObjectType()
 export class Recipe {
@@ -16,25 +17,28 @@ export class Recipe {
   @Field({ nullable: true })
   description: string;
 
-  @Field()
-  yieldOptions: [string];
+  @Field(() => [Int])
+  yieldOptions: [number];
 
   @Field()
   imagePath: string;
 
-  @Field()
+  @Field(() => Int)
   difficulty: number;
 
-  @Field()
+  @Field(() => Int)
   duration: number;
 
-  @Field(() => [InstructionStep])
+  @Field(() => [InstructionStep], { nullable: true })
   instructionSteps: [InstructionStep];
 
   @Field(() => [RecipeIngredient], { nullable: true })
   ingredients: [RecipeIngredient];
 
-  @Field({ nullable: true })
+  @Field(() => [Ingredient], { nullable: true })
+  missingIngredients: [Ingredient];
+
+  @Field(() => [String], { nullable: true })
   tags: [string]; //TODO Replace with explicit Type later
 
   constructor(
@@ -42,12 +46,13 @@ export class Recipe {
     name: string,
     subtitle: string,
     description: string,
-    yieldOptions: [string],
+    yieldOptions: [number],
     imagePath: string,
     difficulty: number,
     duration: number,
     instructionSteps: [InstructionStep],
     ingredients: [RecipeIngredient],
+    missingIngredients: [Ingredient],
     tags: [string]
   ) {
     this.recipeId = recipeId;
@@ -60,6 +65,7 @@ export class Recipe {
     this.duration = duration;
     this.instructionSteps = instructionSteps;
     this.ingredients = ingredients;
+    this.missingIngredients = missingIngredients;
     this.tags = tags;
   }
 }

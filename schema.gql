@@ -14,6 +14,12 @@ type Ingredient {
   searchCount: Float!
 }
 
+type InstructionStep {
+  imageCaption: String
+  imagePath: String
+  instruction: String!
+}
+
 type Mutation {
   setRecipePreferencesForUser(preferences: RecipePreferencesInput!): RecipePreferences!
 }
@@ -23,6 +29,33 @@ type Query {
   ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
   popularIngredients(count: Float = 5): [Ingredient!]!
   recipePreferencesForUser: RecipePreferences!
+  searchForRecipes(searchOptions: SearchOptionsInput!, skip: Int = 0, take: Int = 25): [Recipe!]!
+}
+
+type Recipe {
+  description: String
+  difficulty: Int!
+  duration: Int!
+
+  """
+  The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+  """
+  ID: String!
+  imagePath: String!
+  ingredients: [RecipeIngredient!]
+  instructionSteps: [InstructionStep!]
+  missingIngredients: [Ingredient!]
+  name: String!
+  subtitle: String
+  tags: [String!]
+  yieldOptions: [Int!]!
+}
+
+type RecipeIngredient {
+  amount: Float!
+  ingredient: Ingredient!
+  unit: String!
+  yields: Int!
 }
 
 type RecipePreferences {
@@ -40,6 +73,11 @@ input RecipePreferencesInput {
   gluten: Boolean!
   vegan: Boolean!
   vegetarian: Boolean!
+}
+
+input SearchOptionsInput {
+  ingredients: [String!]!
+  tags: [String!]!
 }
 
 type User {
