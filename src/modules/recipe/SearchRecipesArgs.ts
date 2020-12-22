@@ -11,7 +11,7 @@ export class SearchRecipesArgs {
   @Field(() => Int)
   @Min(1)
   @Max(50)
-  take = 25;
+  take: number = 25;
 
   @Field()
   searchOptions: SearchOptionsInput;

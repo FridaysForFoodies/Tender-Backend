@@ -4,7 +4,6 @@ import { IRecipeProvider, RECIPE_PROVIDER } from "./RecipeProvider";
 import { Recipe } from "../../model/Recipe";
 import CurrentUser from "../../decorator/current_user";
 import { User } from "../../model/User";
-import { SearchOptionsInput } from "./SearchOptionsInput";
 import { SearchRecipesArgs } from "./SearchRecipesArgs";
 
 @Resolver(RecipeResolver)
