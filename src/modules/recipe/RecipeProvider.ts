@@ -2,7 +2,7 @@ import { User } from "../../model/User";
 import { Inject, Service } from "typedi";
 import { DATABASE, IDatabase } from "../../Database";
 import { Recipe } from "../../model/Recipe";
-import { Integer, Record } from "neo4j-driver";
+import { Record } from "neo4j-driver";
 import { InstructionStep } from "../../model/InstructionStep";
 import { Ingredient } from "../../model/Ingredient";
 import { IngredientProvider } from "../ingredients/IngredientProvider";
@@ -112,7 +112,7 @@ export class RecipeProvider implements IRecipeProvider {
         }
         recipe.ingredients = ingredients as [Ingredient];
 
-        recipe.missingIngredients = ingredients.filter((ingredient, index) => {
+        recipe.missingIngredients = ingredients.filter((ingredient) => {
           return !availableIngredients.includes(ingredient.id);
         }) as [Ingredient];
       }
