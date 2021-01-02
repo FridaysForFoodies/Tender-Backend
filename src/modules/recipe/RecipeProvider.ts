@@ -103,6 +103,11 @@ export class RecipeProvider implements IRecipeProvider {
           ) as [Yield];
         }
         recipe.ingredients = ingredients as [Ingredient];
+
+        const rand = Math.floor(Math.random() * (ingredients.length - 1) * 0.3);
+        recipe.missingIngredients = ingredients.filter((value, index) => {
+          return index < rand;
+        }) as [Ingredient];
       }
 
       return recipes;
