@@ -12,6 +12,7 @@ type Ingredient {
   imagePath: String!
   name: String!
   searchCount: Float!
+  yields: [Yield!]!
 }
 
 type InstructionStep {
@@ -42,20 +43,13 @@ type Recipe {
   """
   ID: String!
   imagePath: String!
-  ingredients: [RecipeIngredient!]
+  ingredients: [Ingredient!]
   instructionSteps: [InstructionStep!]
   missingIngredients: [Ingredient!]
   name: String!
   subtitle: String
   tags: [String!]
   yieldOptions: [Int!]!
-}
-
-type RecipeIngredient {
-  amount: Float!
-  ingredient: Ingredient!
-  unit: String!
-  yields: Int!
 }
 
 type RecipePreferences {
@@ -82,4 +76,10 @@ input SearchOptionsInput {
 
 type User {
   uuid: ID!
+}
+
+type Yield {
+  amount: Float!
+  unit: String!
+  yield: Int!
 }

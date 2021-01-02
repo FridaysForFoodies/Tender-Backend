@@ -4,6 +4,9 @@ import { DATABASE, IDatabase } from "../../Database";
 import { Recipe } from "../../model/Recipe";
 import { Integer, Record } from "neo4j-driver";
 import { InstructionStep } from "../../model/InstructionStep";
+import { Ingredient } from "../../model/Ingredient";
+import { IngredientProvider } from "../ingredients/IngredientProvider";
+import { Yield } from "../../model/Yield";
 
 export const RECIPE_PROVIDER = "recipe-provider";
 
@@ -43,6 +46,15 @@ export class RecipeProvider implements IRecipeProvider {
     );
   }
 
+  private static recordToYield(record: Record): Yield {
+    const properties = record.get("yield").properties;
+    return new Yield(
+      Number.parseFloat(properties.amount),
+      properties.unit,
+      Number.parseFloat(properties.yields)
+    );
+  }
+
   async _mock_getRecipes(
     user: User,
     take: number,
@@ -50,14 +62,50 @@ export class RecipeProvider implements IRecipeProvider {
   ): Promise<Recipe[]> {
     const session = this.db.getSession();
     try {
-      const result = await session.run(
+      let result = await session.run(
         `MATCH (n:Recipe) RETURN n AS recipe SKIP toInteger($skip) LIMIT toInteger($limit)`,
         {
           limit: take,
           skip: skip,
         }
       );
-      return result.records.map((r) => RecipeProvider.recordToRecipe(r));
+
+      const recipes: Recipe[] = result.records.map((r) =>
+        RecipeProvider.recordToRecipe(r)
+      );
+
+      for (const recipe of recipes) {
+        const ingredientResult = await session.run(
+          `MATCH (recipe:Recipe {recipeId: $recipeId}) \n
+          MATCH (recipe)<-[:USED_IN]-(ingredient:Ingredient) \n
+          RETURN ingredient`,
+          {
+            recipeId: recipe.recipeId,
+          }
+        );
+        const ingredients: Ingredient[] = ingredientResult.records.map((r) =>
+          IngredientProvider.recordToIngredient(r)
+        );
+
+        for (const ingredient of ingredients) {
+          const yieldResult = await session.run(
+            `MATCH (n:Recipe {recipeId: $recipeId}) \n
+              MATCH (i:Ingredient {ingredientId: $ingredientId}) \n
+              MATCH p=(n)<-[yield:USED_IN]-(i) \n
+              RETURN yield`,
+            {
+              recipeId: recipe.recipeId,
+              ingredientId: ingredient.id,
+            }
+          );
+          ingredient.yields = yieldResult.records.map((r) =>
+            RecipeProvider.recordToYield(r)
+          ) as [Yield];
+        }
+        recipe.ingredients = ingredients as [Ingredient];
+      }
+
+      return recipes;
     } catch (e) {
       return Promise.reject(e);
     } finally {

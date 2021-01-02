@@ -1,6 +1,6 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
 import { InstructionStep } from "./InstructionStep";
-import { RecipeIngredient } from "./RecipeIngredient";
+import { Yield } from "./Yield";
 import { Ingredient } from "./Ingredient";
 
 @ObjectType()
@@ -32,8 +32,8 @@ export class Recipe {
   @Field(() => [InstructionStep], { nullable: true })
   instructionSteps: [InstructionStep];
 
-  @Field(() => [RecipeIngredient], { nullable: true })
-  ingredients: [RecipeIngredient];
+  @Field(() => [Ingredient], { nullable: true })
+  ingredients: [Ingredient];
 
   @Field(() => [Ingredient], { nullable: true })
   missingIngredients: [Ingredient];
@@ -51,7 +51,7 @@ export class Recipe {
     difficulty: number,
     duration: number,
     instructionSteps: [InstructionStep],
-    ingredients: [RecipeIngredient],
+    ingredients: [Ingredient],
     missingIngredients: [Ingredient],
     tags: [string]
   ) {
