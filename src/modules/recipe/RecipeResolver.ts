@@ -17,6 +17,12 @@ export class RecipeResolver {
     @CurrentUser() user: User,
     @Args() { take, skip, searchOptions }: SearchRecipesArgs
   ): Promise<Recipe[]> {
-    return this.recipeProvider._mock_getRecipes(user, take, skip);
+    return this.recipeProvider._mock_getRecipes(
+      user,
+      take,
+      skip,
+      searchOptions.ingredients,
+      searchOptions.tags
+    );
   }
 }

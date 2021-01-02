@@ -11,7 +11,13 @@ import { Yield } from "../../model/Yield";
 export const RECIPE_PROVIDER = "recipe-provider";
 
 export interface IRecipeProvider {
-  _mock_getRecipes(user: User, take: number, skip: number): Promise<Recipe[]>;
+  _mock_getRecipes(
+    user: User,
+    take: number,
+    skip: number,
+    availableIngredients: [string],
+    selectedTags: [string]
+  ): Promise<Recipe[]>;
 }
 
 @Service(RECIPE_PROVIDER)
@@ -58,7 +64,9 @@ export class RecipeProvider implements IRecipeProvider {
   async _mock_getRecipes(
     user: User,
     take: number,
-    skip: number
+    skip: number,
+    availableIngredients: [string],
+    selectedTags: [string]
   ): Promise<Recipe[]> {
     const session = this.db.getSession();
     try {
@@ -104,9 +112,8 @@ export class RecipeProvider implements IRecipeProvider {
         }
         recipe.ingredients = ingredients as [Ingredient];
 
-        const rand = Math.floor(Math.random() * (ingredients.length - 1) * 0.3);
-        recipe.missingIngredients = ingredients.filter((value, index) => {
-          return index < rand;
+        recipe.missingIngredients = ingredients.filter((ingredient, index) => {
+          return !availableIngredients.includes(ingredient.id);
         }) as [Ingredient];
       }
 
