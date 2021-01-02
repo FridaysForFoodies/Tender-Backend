@@ -71,7 +71,7 @@ export class RecipeProvider implements IRecipeProvider {
     const session = this.db.getSession();
     try {
       let result = await session.run(
-        `MATCH (n:Recipe) RETURN n AS recipe SKIP toInteger($skip) LIMIT toInteger($limit)`,
+        `MATCH (recipe:Recipe) RETURN recipe SKIP toInteger($skip) LIMIT toInteger($limit)`,
         {
           limit: take,
           skip: skip,
@@ -97,9 +97,9 @@ export class RecipeProvider implements IRecipeProvider {
 
         for (const ingredient of ingredients) {
           const yieldResult = await session.run(
-            `MATCH (n:Recipe {recipeId: $recipeId}) \n
-              MATCH (i:Ingredient {ingredientId: $ingredientId}) \n
-              MATCH p=(n)<-[yield:USED_IN]-(i) \n
+            `MATCH (recipe:Recipe {recipeId: $recipeId}) \n
+              MATCH (ingredient:Ingredient {ingredientId: $ingredientId}) \n
+              MATCH (recipe)<-[yield:USED_IN]-(ingredient) \n
               RETURN yield`,
             {
               recipeId: recipe.recipeId,
