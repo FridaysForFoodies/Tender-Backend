@@ -1,5 +1,4 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
-import { Ingredient } from "./Ingredient";
 
 @ObjectType()
 export class Yield {

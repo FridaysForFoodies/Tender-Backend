@@ -15,8 +15,7 @@ export interface IRecipeProvider {
     user: User,
     take: number,
     skip: number,
-    availableIngredients: [string],
-    selectedTags: [string]
+    availableIngredients: [string]
   ): Promise<Recipe[]>;
 }
 
@@ -65,12 +64,11 @@ export class RecipeProvider implements IRecipeProvider {
     user: User,
     take: number,
     skip: number,
-    availableIngredients: [string],
-    selectedTags: [string]
+    availableIngredients: [string]
   ): Promise<Recipe[]> {
     const session = this.db.getSession();
     try {
-      let result = await session.run(
+      const result = await session.run(
         `MATCH (recipe:Recipe) RETURN recipe SKIP toInteger($skip) LIMIT toInteger($limit)`,
         {
           limit: take,

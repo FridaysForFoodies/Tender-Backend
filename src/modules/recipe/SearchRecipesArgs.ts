@@ -1,4 +1,4 @@
-import { Arg, ArgsType, Field, Int } from "type-graphql";
+import { ArgsType, Field, Int } from "type-graphql";
 import { Max, Min } from "class-validator";
 import { SearchOptionsInput } from "./SearchOptionsInput";
 
@@ -8,10 +8,10 @@ export class SearchRecipesArgs {
   @Min(0)
   skip: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 25 })
   @Min(1)
   @Max(50)
-  take: number = 25;
+  take: number;
 
   @Field()
   searchOptions: SearchOptionsInput;

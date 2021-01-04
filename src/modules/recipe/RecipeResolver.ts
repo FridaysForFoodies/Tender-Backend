@@ -1,4 +1,4 @@
-import { Arg, Args, Query, Resolver } from "type-graphql";
+import { Args, Query, Resolver } from "type-graphql";
 import { Inject } from "typedi";
 import { IRecipeProvider, RECIPE_PROVIDER } from "./RecipeProvider";
 import { Recipe } from "../../model/Recipe";
@@ -21,8 +21,7 @@ export class RecipeResolver {
       user,
       take,
       skip,
-      searchOptions.ingredients,
-      searchOptions.tags
+      searchOptions.ingredients
     );
   }
 }

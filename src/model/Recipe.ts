@@ -1,6 +1,5 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
 import { InstructionStep } from "./InstructionStep";
-import { Yield } from "./Yield";
 import { Ingredient } from "./Ingredient";
 
 @ObjectType()
