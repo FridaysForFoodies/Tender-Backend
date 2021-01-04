@@ -7,19 +7,19 @@ export class Recipe {
   @Field(ID)
   recipeId: string;
 
-  @Field()
+  @Field(() => String)
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   subtitle: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   description: string;
 
   @Field(() => [Int])
   yieldOptions: [number];
 
-  @Field()
+  @Field(() => String)
   imagePath: string;
 
   @Field(() => Int)

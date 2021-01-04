@@ -2,13 +2,13 @@ import { Field, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class InstructionStep {
-  @Field()
+  @Field(() => String)
   instruction: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   imagePath: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   imageCaption: string;
 
   constructor(instruction: string, imagePath: string, imageCaption: string) {

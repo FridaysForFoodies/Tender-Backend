@@ -5,7 +5,7 @@ export class Yield {
   @Field(() => Float)
   amount: number;
 
-  @Field()
+  @Field(() => String)
   unit: string;
 
   @Field(() => Int)
