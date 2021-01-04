@@ -5,10 +5,10 @@ export class Tag {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @Field(() => String)
   name: string;
 
-  @Field()
+  @Field(() => String)
   imagePath: string;
 
   constructor(id: string, name: string, imagePath: string) {
