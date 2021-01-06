@@ -27,6 +27,16 @@ const popularIngredientsCountQuery = `query {
     searchCount
   }
 }`;
+const personalCommonIngredientsQuery = `query {
+  personalCommonIngredients {
+    searchCount
+  }
+}`;
+const personalCommonIngredientsCountQuery = `query {
+  personalCommonIngredients(count: ${count}) {
+    searchCount
+  }
+}`;
 
 beforeAll(async () => {
   query = (await testServer()).query;
@@ -80,5 +90,31 @@ describe("QUERY popular ingredients", () => {
     const result = await query({ query: popularIngredientsCountQuery });
 
     expect(result.data.popularIngredients.length).toBeLessThanOrEqual(count);
+  });
+});
+
+
+describe("QUERY personal common ingredients", () => {
+  it("should return ingredients sorted by search count in descending order", async () => {
+    const result = await query({ query: personalCommonIngredientsQuery });
+
+    const ingredients = result.data.personalCommonIngredients;
+    for (let i = 1; i < ingredients.length; i++) {
+      expect(ingredients[i].searchCount).toBeLessThanOrEqual(
+        ingredients[i - 1].searchCount
+      );
+    }
+  });
+
+  it("should return no more than five ingredients", async () => {
+    const result = await query({ query: popularIngredientsQuery });
+
+    expect(result.data.personalCommonIngredients.length).toBeLessThanOrEqual(5);
+  });
+
+  it("should return no more than the requested number of ingredients", async () => {
+    const result = await query({ query: personalCommonIngredientsCountQuery });
+
+    expect(result.data.personalCommonIngredients.length).toBeLessThanOrEqual(count);
   });
 });
