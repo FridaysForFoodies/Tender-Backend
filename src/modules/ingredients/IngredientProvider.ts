@@ -19,7 +19,7 @@ export class IngredientProvider implements IIngredientProvider {
       record.get("ingredient").properties.ingredientId,
       record.get("ingredient").properties.name,
       record.get("ingredient").properties.imagePath,
-      (record.get("ingredient").properties.searchCount?.toInteger() || 0)
+      (record.get("ingredient").properties.searchCount?.toInt() || 0)
     );
   }
 
