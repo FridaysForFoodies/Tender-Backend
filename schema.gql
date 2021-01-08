@@ -11,7 +11,7 @@ type Ingredient {
   ID: String!
   imagePath: String!
   name: String!
-  searchCount: Float!
+  searchCount: Int!
   yields: [Yield!]!
 }
 
@@ -26,6 +26,7 @@ type Mutation {
 }
 
 type Query {
+  findTags(skip: Int = 0, take: Int = 5): [Tag!]!
   generateUser: User!
   ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
   popularIngredients(count: Float = 5): [Ingredient!]!
@@ -72,6 +73,12 @@ input RecipePreferencesInput {
 input SearchOptionsInput {
   ingredients: [String!]!
   tags: [String!]!
+}
+
+type Tag {
+  id: ID!
+  imagePath: String!
+  name: String!
 }
 
 type User {
