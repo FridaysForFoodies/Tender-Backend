@@ -41,7 +41,7 @@ describe("QUERY ingredient suggestions", () => {
     const result = await query({ query: ingredientSuggestionsQuery });
 
     result.data.ingredientSuggestions.forEach((i) =>
-      expect(i.name).toContain(queryString)
+      expect(i.name.toLowerCase()).toContain(queryString.toLowerCase())
     );
   });
 
