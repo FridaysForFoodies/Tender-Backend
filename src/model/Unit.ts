@@ -5,10 +5,10 @@ export class Unit {
   @Field(ID)
   id: number;
 
-  @Field()
+  @Field(() => String)
   name: string;
 
-  @Field()
+  @Field(() => String)
   abbreviation: string;
 
   constructor(id: number, name: string, abbreviation: string) {

@@ -15,7 +15,7 @@ export interface IIngredientProvider {
 export class IngredientProvider implements IIngredientProvider {
   constructor(@Inject(DATABASE) private readonly db: IDatabase) {}
 
-  private static recordToIngredient(record: Record): Ingredient {
+  public static recordToIngredient(record: Record): Ingredient {
     return new Ingredient(
       record.get("ingredient").properties.ingredientId,
       record.get("ingredient").properties.name,
