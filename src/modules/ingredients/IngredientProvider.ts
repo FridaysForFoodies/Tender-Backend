@@ -41,7 +41,7 @@ export class IngredientProvider implements IIngredientProvider {
     try {
       const result = await session.run(
         `MATCH (ingredient:Ingredient)
-        WHERE ingredient.name CONTAINS $query 
+        WHERE toLower(ingredient.name) CONTAINS toLower($query) 
         RETURN ingredient
         LIMIT toInteger($count)`,
         {
