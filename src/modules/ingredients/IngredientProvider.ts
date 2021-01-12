@@ -8,6 +8,7 @@ export const INGREDIENT_PROVIDER = "ingredient-provider";
 export interface IIngredientProvider {
   getAllWhereNameContains(query: string, count: number): Promise<Ingredient[]>;
   getPopular(count: number): Promise<Ingredient[]>;
+  getPersonalCommon(count: number, userId: string): Promise<Ingredient[]>;
 }
 
 @Service(INGREDIENT_PROVIDER)
@@ -19,8 +20,17 @@ export class IngredientProvider implements IIngredientProvider {
       record.get("ingredient").properties.ingredientId,
       record.get("ingredient").properties.name,
       record.get("ingredient").properties.imagePath,
-      record.get("ingredient").properties.searchCount?.toNumber() || 0
+      (record.get("ingredient").properties.searchCount?.toInt() || 0)
     );
+  }
+
+  private static recordToPersonalIngredient(record: Record): Ingredient {
+    return new Ingredient(
+      record.get("ingredient").properties.ingredientId,
+      record.get("ingredient").properties.name,
+      record.get("ingredient").properties.imagePath,
+      (record.get("relation").properties.searchCount?.toInt() || 0)
+    )
   }
 
   async getAllWhereNameContains(
@@ -61,6 +71,26 @@ export class IngredientProvider implements IIngredientProvider {
       );
       return result.records.map((r) =>
         IngredientProvider.recordToIngredient(r)
+      );
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      await session.close();
+    }
+  }
+
+  async getPersonalCommon(count: number, userId: string): Promise<Ingredient[]> {
+    const session = this.db.getSession();
+    try {
+      const result = await session.run(
+        `MATCH (user: User { uuid: $userId })-[relation:SEARCHED_FOR]->(ingredient:Ingredient)
+        RETURN ingredient, relation
+        ORDER BY relation.searchCount DESC
+        LIMIT toInteger($count)`,
+        { count: count, userId: userId }
+      );
+      return result.records.map((r) =>
+        IngredientProvider.recordToPersonalIngredient(r)
       );
     } catch (e) {
       return Promise.reject(e);
