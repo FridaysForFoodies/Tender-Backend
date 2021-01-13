@@ -17,6 +17,7 @@ export interface IRecipeProvider {
     skip: number,
     availableIngredients: [string]
   ): Promise<Recipe[]>;
+  findRecipe(recipeId: string): Promise<Recipe>;
 }
 
 @Service(RECIPE_PROVIDER)
@@ -116,6 +117,39 @@ export class RecipeProvider implements IRecipeProvider {
       }
 
       return recipes;
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      await session.close();
+    }
+  }
+
+  async findRecipe(recipeId: string): Promise<Recipe> {
+    const session = this.db.getSession();
+    try {
+      const result = await session.run(
+        `MATCH (recipe:Recipe {recipeId: $recipeId})<-[:USED_IN]-(ingredient:Ingredient) 
+        RETURN DISTINCT recipe, ingredient`,
+        {
+          recipeId: recipeId,
+        }
+      );
+      const recipe = RecipeProvider.recordToRecipe(result.records[0]);
+      recipe.ingredients = result.records.map(r => IngredientProvider.recordToIngredient(r)) as [Ingredient];
+
+      for (const ingredient of recipe.ingredients) {
+        const yieldResult = await session.run(
+          `MATCH (:Recipe {recipeId: $recipeId})<-[yield:USED_IN]-(ingredient:Ingredient {ingredientId: $ingredientId})
+          RETURN yield`,
+          {
+            recipeId: recipe.recipeId,
+            ingredientId: ingredient.id
+          }
+        );
+        ingredient.yields = yieldResult.records.map(r => RecipeProvider.recordToYield(r)) as [Yield];
+      }
+
+      return recipe;
     } catch (e) {
       return Promise.reject(e);
     } finally {

@@ -1,4 +1,4 @@
-import { Args, Query, Resolver } from "type-graphql";
+import { Arg, Args, Query, Resolver } from "type-graphql";
 import { Inject } from "typedi";
 import { IRecipeProvider, RECIPE_PROVIDER } from "./RecipeProvider";
 import { Recipe } from "../../model/Recipe";
@@ -23,5 +23,12 @@ export class RecipeResolver {
       skip,
       searchOptions.ingredients
     );
+  }
+
+  @Query(() => Recipe)
+  async findRecipe(
+    @Arg("recipeId") recipeId: string
+  ): Promise<Recipe> {
+    return this.recipeProvider.findRecipe(recipeId);
   }
 }
