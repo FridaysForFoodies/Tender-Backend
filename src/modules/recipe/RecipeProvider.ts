@@ -134,8 +134,12 @@ export class RecipeProvider implements IRecipeProvider {
           recipeId: recipeId,
         }
       );
+
+      // No recipe found, return
+      if (result.records.length === 0) return null;
+
       const recipe = RecipeProvider.recordToRecipe(result.records[0]);
-      recipe.ingredients = result.records.map(r => IngredientProvider.recordToIngredient(r)) as [Ingredient];
+      recipe.ingredients = result.records.map(r => IngredientProvider.recordToIngredient(r));
 
       for (const ingredient of recipe.ingredients) {
         const yieldResult = await session.run(
@@ -146,7 +150,7 @@ export class RecipeProvider implements IRecipeProvider {
             ingredientId: ingredient.id
           }
         );
-        ingredient.yields = yieldResult.records.map(r => RecipeProvider.recordToYield(r)) as [Yield];
+        ingredient.yields = yieldResult.records.map(r => RecipeProvider.recordToYield(r));
       }
 
       return recipe;

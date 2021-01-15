@@ -18,7 +18,7 @@ type Ingredient {
 type InstructionStep {
   imageCaption: String
   imagePath: String
-  instruction: String!
+  instructions: String!
 }
 
 type Mutation {
@@ -26,7 +26,7 @@ type Mutation {
 }
 
 type Query {
-  findRecipe(recipeId: String!): Recipe!
+  findRecipe(recipeId: String!): Recipe
   findTags(skip: Int = 0, take: Int = 5): [Tag!]!
   generateUser: User!
   ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
@@ -90,5 +90,5 @@ type User {
 type Yield {
   amount: Float!
   unit: String!
-  yield: Int!
+  yields: Int!
 }

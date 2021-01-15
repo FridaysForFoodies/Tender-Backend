@@ -4,7 +4,7 @@ import { int, Result } from "neo4j-driver";
 import { Ingredient } from "../../../../src/model/Ingredient";
 import * as faker from "faker";
 
-function generateRandomIngredient(): Ingredient {
+export function generateRandomIngredient(): Ingredient {
   return new Ingredient(
     faker.random.alphaNumeric(24),
     faker.random.word(),
@@ -55,7 +55,7 @@ beforeAll(() => {
 });
 
 describe("All ingredients where name contains", () => {
-  it("should return database result mapped to ingredient objects", () => {
+  it("should return database result mapped to ingredient objects", async () => {
     const ingredient = generateRandomIngredient();
 
     const runMock = jest.fn().mockResolvedValue(mockIngredientResult(ingredient));
@@ -63,9 +63,9 @@ describe("All ingredients where name contains", () => {
       new DatabaseMock({ runMock: runMock })
     );
 
-    expect(
-      ingredientProvider.getAllWhereNameContains("", 0)
-    ).resolves.toMatchObject([ingredient]);
+    const result = await ingredientProvider.getAllWhereNameContains("", 0);
+
+    expect(result).toMatchObject([ingredient]);
   });
 
   it("should close the database session", async () => {
@@ -81,7 +81,7 @@ describe("All ingredients where name contains", () => {
 });
 
 describe("Popular ingredients", () => {
-  it("should return database result mapped to ingredient objects", () => {
+  it("should return database result mapped to ingredient objects", async () => {
     const ingredient = generateRandomIngredient();
 
     const runMock = jest.fn().mockResolvedValue(mockIngredientResult(ingredient));
@@ -89,9 +89,9 @@ describe("Popular ingredients", () => {
       new DatabaseMock({ runMock: runMock })
     );
 
-    expect(ingredientProvider.getPopular(1)).resolves.toMatchObject([
-      ingredient
-    ]);
+    const result = await ingredientProvider.getPopular(1);
+
+    expect(result).toMatchObject([ingredient]);
   });
 
   it("should close the database session", async () => {
@@ -107,7 +107,7 @@ describe("Popular ingredients", () => {
 });
 
 describe("Personal common ingredients", () => {
-  it("should return database result mapped to ingredient objects", () => {
+  it("should return database result mapped to ingredient objects", async () => {
     const ingredient = generateRandomIngredient();
     const personalSearchCount = faker.random.number();
 
@@ -119,8 +119,9 @@ describe("Personal common ingredients", () => {
     );
 
     ingredient.searchCount = personalSearchCount;
-    expect(ingredientProvider.getPersonalCommon(1, faker.random.uuid()))
-      .resolves.toMatchObject([ingredient]);
+    const result = await ingredientProvider.getPersonalCommon(1, faker.random.uuid());
+
+    expect(result).toMatchObject([ingredient]);
   });
 
   it("should close the database session", async () => {

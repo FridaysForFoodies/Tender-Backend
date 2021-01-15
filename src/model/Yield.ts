@@ -9,11 +9,11 @@ export class Yield {
   unit: string;
 
   @Field(() => Int)
-  yield: number;
+  yields: number;
 
   constructor(amount: number, unit: string, yields: number) {
     this.amount = amount;
     this.unit = unit;
-    this.yield = yields;
+    this.yields = yields;
   }
 }

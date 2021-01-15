@@ -3,7 +3,7 @@ import { Field, ObjectType } from "type-graphql";
 @ObjectType()
 export class InstructionStep {
   @Field(() => String)
-  instruction: string;
+  instructions: string;
 
   @Field(() => String, { nullable: true })
   imagePath: string;
@@ -11,8 +11,8 @@ export class InstructionStep {
   @Field(() => String, { nullable: true })
   imageCaption: string;
 
-  constructor(instruction: string, imagePath: string, imageCaption: string) {
-    this.instruction = instruction;
+  constructor(instructions: string, imagePath: string, imageCaption: string) {
+    this.instructions = instructions;
     this.imagePath = imagePath;
     this.imageCaption = imageCaption;
   }

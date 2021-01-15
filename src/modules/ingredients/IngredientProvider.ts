@@ -30,7 +30,7 @@ export class IngredientProvider implements IIngredientProvider {
       record.get("ingredient").properties.name,
       record.get("ingredient").properties.imagePath,
       (record.get("relation").properties.searchCount?.toInt() || 0)
-    )
+    );
   }
 
   async getAllWhereNameContains(

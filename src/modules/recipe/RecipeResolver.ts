@@ -25,7 +25,7 @@ export class RecipeResolver {
     );
   }
 
-  @Query(() => Recipe)
+  @Query(() => Recipe, { nullable: true })
   async findRecipe(
     @Arg("recipeId") recipeId: string
   ): Promise<Recipe> {
