@@ -16,7 +16,7 @@ export class RecipePreferences {
   glutenfree: boolean;
 
   @Field()
-  dairyfree: boolean;
+  lactosefree: boolean;
 
   @Field(() => Int)
   cookingTime: number;
@@ -26,14 +26,14 @@ export class RecipePreferences {
     vegan: boolean,
     vegetarian: boolean,
     glutenfree: boolean,
-    dairyfree: boolean,
+    lactosefree: boolean,
     cookingTime: number
   ) {
     this.user = user;
     this.vegan = vegan;
     this.vegetarian = vegetarian;
     this.glutenfree = glutenfree;
-    this.dairyfree = dairyfree;
+    this.lactosefree = lactosefree;
     this.cookingTime = cookingTime;
   }
 }

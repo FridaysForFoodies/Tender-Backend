@@ -27,7 +27,7 @@ export class RecipePreferencesResolver {
   async setRecipePreferencesForUser(
     @Arg("preferences")
     {
-      dairyfree,
+      lactosefree,
       glutenfree,
       vegan,
       vegetarian,
@@ -41,7 +41,7 @@ export class RecipePreferencesResolver {
         vegan,
         vegetarian,
         glutenfree,
-        dairyfree,
+        lactosefree,
         cookingTime
       ),
       user
