@@ -34,14 +34,14 @@ describe("Get User from Database", () => {
   });
 
   it("should return User from Database based on its UUID", async () => {
-    const result = userProvider.getUserByUUID(mock_uuid);
+    const result = await userProvider.getUserByUUID(mock_uuid);
 
-    await expect(result).resolves.toMatchObject(user);
+    expect(result).toMatchObject(user);
   });
 
   it("should create User with UUID and return it from Database", async () => {
-    const result = userProvider.createUserWithUUID(mock_uuid);
+    const result = await userProvider.createUserWithUUID(mock_uuid);
 
-    await expect(result).resolves.toMatchObject(user);
+    expect(result).toMatchObject(user);
   });
 });

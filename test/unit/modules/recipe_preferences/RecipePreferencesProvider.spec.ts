@@ -21,7 +21,7 @@ beforeAll(() => {
   );
 });
 
-describe("Get Recipe Prefernces from Database", () => {
+describe("Get Recipe Preferences from Database", () => {
   let recipePreferencesProvider: RecipePreferencesProvider;
 
   beforeEach(() => {

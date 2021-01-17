@@ -16,14 +16,14 @@ export class Ingredient {
   searchCount: number;
 
   @Field(() => [Yield])
-  yields: [Yield];
+  yields: Yield[];
 
   constructor(
     id: string,
     name: string,
     imagePath: string,
     searchCount: number,
-    yields?: [Yield]
+    yields?: Yield[]
   ) {
     this.id = id;
     this.name = name;
