@@ -22,8 +22,8 @@ const recipePreferencesForUserQuery = `query {
   recipePreferencesForUser {
     vegan
     vegetarian
-    gluten
-    dairy
+    glutenfree
+    dairyfree
     cookingTime
   }
 }`;
@@ -32,8 +32,8 @@ const setRecipePreferencesMutation = `mutation($prefs: RecipePreferencesInput!) 
   setRecipePreferencesForUser(preferences: $prefs) {
     vegan
     vegetarian
-    gluten
-    dairy
+    glutenfree
+    dairyfree
     cookingTime
   }
 }`;
@@ -91,8 +91,8 @@ describe("QUERY get RecipePreferences", () => {
     expect(result).toMatchObject({
       data: {
         recipePreferencesForUser: {
-          dairy: mock_preferences.dairy,
-          gluten: mock_preferences.gluten,
+          dairyfree: mock_preferences.dairyfree,
+          glutenfree: mock_preferences.glutenfree,
           vegan: mock_preferences.vegan,
           vegetarian: mock_preferences.vegetarian,
           cookingTime: mock_preferences.cookingTime,
@@ -123,8 +123,8 @@ describe("MUTATION for RecipePreferences", () => {
       mutation: setRecipePreferencesMutation,
       variables: {
         prefs: {
-          dairy: mock_preferences.dairy,
-          gluten: mock_preferences.gluten,
+          dairyfree: mock_preferences.dairyfree,
+          glutenfree: mock_preferences.glutenfree,
           vegan: mock_preferences.vegan,
           vegetarian: mock_preferences.vegetarian,
           cookingTime: mock_preferences.cookingTime,
@@ -135,8 +135,8 @@ describe("MUTATION for RecipePreferences", () => {
     expect(result).toMatchObject({
       data: {
         setRecipePreferencesForUser: {
-          dairy: mock_preferences.dairy,
-          gluten: mock_preferences.gluten,
+          dairyfree: mock_preferences.dairyfree,
+          glutenfree: mock_preferences.glutenfree,
           vegan: mock_preferences.vegan,
           vegetarian: mock_preferences.vegetarian,
           cookingTime: mock_preferences.cookingTime,
