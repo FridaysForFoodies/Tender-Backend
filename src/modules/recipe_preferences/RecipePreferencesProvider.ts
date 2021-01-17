@@ -53,8 +53,8 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
           userId: user.uuid,
           vegan: pref.vegan,
           vegetarian: pref.vegetarian,
-          gluten: pref.gluten,
-          dairy: pref.dairy,
+          gluten: pref.glutenfree,
+          dairy: pref.dairyfree,
           cookingTime: pref.cookingTime,
         }
       );
