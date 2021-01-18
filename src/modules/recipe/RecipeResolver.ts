@@ -39,4 +39,9 @@ export class RecipeResolver {
   ): Promise<Recipe> {
     return this.recipeProvider.addToFavourites(recipeId, user.uuid);
   }
+
+  @Query(() => [Recipe])
+  async findFavouriteRecipes(@CurrentUser() user: User): Promise<Recipe[]> {
+    return this.recipeProvider.findFavouriteRecipes(user.uuid);
+  }
 }

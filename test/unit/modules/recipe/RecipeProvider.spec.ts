@@ -70,7 +70,7 @@ function generateRandomRecipe(yields?): Recipe {
   );
 }
 
-function mockRecipeResult(recipe: Recipe): Result {
+function mockRecipeWithIngredientsResult(recipe: Recipe): Result {
   const records = [];
   for (const ingredient of recipe.ingredients) {
     records.push({
@@ -100,6 +100,24 @@ function mockRecipeResult(recipe: Recipe): Result {
   return mockResult(records);
 }
 
+function mockRecipeResult(recipe: Recipe): Result {
+  return mockResult([{
+    recipe: {
+      properties: {
+        recipeId: recipe.recipeId,
+        name: recipe.name,
+        subtitle: recipe.subtitle,
+        description: recipe.description,
+        yieldOptions: JSON.stringify(recipe.yieldOptions),
+        imagePath: recipe.imagePath,
+        difficulty: int(recipe.difficulty),
+        duration: int(recipe.duration),
+        steps: JSON.stringify(recipe.instructionSteps),
+      }
+    }
+  }]);
+}
+
 function mockYieldResult(yields: Yield[]): Result {
   const records = [];
   for (const _yield of yields) {
@@ -127,7 +145,7 @@ describe("Find a recipe by its ID", () => {
     const recipe = generateRandomRecipe(yields);
 
     const runMock = jest.fn()
-      .mockResolvedValueOnce(mockRecipeResult(recipe))
+      .mockResolvedValueOnce(mockRecipeWithIngredientsResult(recipe))
       .mockResolvedValue(mockYieldResult(yields));
     const recipeProvider = new RecipeProvider(
       new DatabaseMock({ runMock: runMock })
@@ -172,6 +190,33 @@ describe("Add a recipe to favourites", () => {
     );
 
     await recipeProvider.addToFavourites("", "");
+
+    expect(closeMock.mock.calls).toHaveLength(1);
+  });
+});
+
+describe("Find favourite recipes", () => {
+  it("should return database result mapped to recipe object", async () => {
+    const recipe = generateRandomRecipe(generateRandomYields());
+
+    const runMock = jest.fn().mockResolvedValue(mockRecipeResult(recipe));
+    const recipeProvider = new RecipeProvider(
+      new DatabaseMock({ runMock: runMock })
+    );
+    recipe.ingredients = null;
+
+    const result = await recipeProvider.findFavouriteRecipes("");
+
+    expect(result).toMatchObject([recipe]);
+  });
+
+  it("should close the database session", async () => {
+    const closeMock = jest.fn();
+    const recipeProvider = new RecipeProvider(
+      new DatabaseMock({ closeMock: closeMock })
+    );
+
+    await recipeProvider.findFavouriteRecipes("");
 
     expect(closeMock.mock.calls).toHaveLength(1);
   });

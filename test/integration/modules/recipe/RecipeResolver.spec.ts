@@ -35,6 +35,12 @@ const addRecipeToFavouritesInvalidIDQuery = `mutation {
   }
 }`;
 
+const findFavouriteRecipesQuery = `query {
+  findFavouriteRecipes {
+    ID
+  }
+}`;
+
 beforeAll(async () => {
   query = (await testServer()).query;
 });
@@ -86,5 +92,30 @@ describe("MUTATION add recipe to favourites", () => {
     const result = await mutation({ query: addRecipeToFavouritesInvalidIDQuery });
 
     expect(result.data.addRecipeToFavourites).toBeNull();
+  });
+});
+
+describe("QUERY find favourite recipes", () => {
+  beforeAll(async () => {
+    loadConfig();
+
+    const userProvider = Container.get(USER_PROVIDER) as UserProvider;
+    mockUser = await userProvider.createUserWithUUID(TEST_UUID);
+
+    const server = await testServer({
+      context() {
+        return {
+          user: mockUser
+        };
+      }
+    });
+    query = server.query;
+  });
+
+  it("should return a list of favourite recipes", async () => {
+    const result = await query({ query: findFavouriteRecipesQuery });
+
+    result.data.findFavouriteRecipes.forEach(r =>
+      expect(r.ID.toLowerCase()).toMatch(TEST_RECIPE_ID.toLowerCase()));
   });
 });

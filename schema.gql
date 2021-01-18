@@ -27,6 +27,7 @@ type Mutation {
 }
 
 type Query {
+  findFavouriteRecipes: [Recipe!]!
   findRecipe(recipeId: String!): Recipe
   findTags(skip: Int = 0, take: Int = 5): [Tag!]!
   generateUser: User!
