@@ -18,6 +18,7 @@ export interface IRecipeProvider {
     availableIngredients: [string]
   ): Promise<Recipe[]>;
   findRecipe(recipeId: string): Promise<Recipe>;
+  addToFavourites(recipeId: string, userId: string): Promise<Recipe>;
 }
 
 @Service(RECIPE_PROVIDER)
@@ -154,6 +155,30 @@ export class RecipeProvider implements IRecipeProvider {
       }
 
       return recipe;
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      await session.close();
+    }
+  }
+
+  async addToFavourites(recipeId: string, userId: string): Promise<Recipe> {
+    const session = this.db.getSession();
+    try {
+      const result = await session.run(
+        `MATCH (recipe:Recipe {recipeId: $recipeId}), (user:User {uuid: $userId})
+        MERGE (user)-[:LIKED]->(recipe)
+        RETURN recipe`,
+        {
+          recipeId: recipeId,
+          userId: userId
+        }
+      );
+
+      // Recipe not found, return null
+      if (result.records.length === 0) return null;
+
+      return RecipeProvider.recordToRecipe(result.records[0]);
     } catch (e) {
       return Promise.reject(e);
     } finally {

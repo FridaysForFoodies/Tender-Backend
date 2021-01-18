@@ -22,6 +22,7 @@ type InstructionStep {
 }
 
 type Mutation {
+  addRecipeToFavourites(recipeId: String!): Recipe
   setRecipePreferencesForUser(preferences: RecipePreferencesInput!): RecipePreferences!
 }
 
