@@ -155,7 +155,7 @@ RETURN prefs.cookingTime as cookingTime, vegan, vegetarian, glutenfree, lactosef
         record.get("vegetarian"),
         record.get("glutenfree"),
         record.get("lactosefree"),
-        record.get("cookingTime").toInt()
+        record.get("cookingTime")
       );
     });
 
