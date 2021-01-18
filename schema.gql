@@ -57,8 +57,8 @@ type Recipe {
 
 type RecipePreferences {
   cookingTime: Int!
-  dairy: Boolean!
-  gluten: Boolean!
+  dairyfree: Boolean!
+  glutenfree: Boolean!
   user: User!
   vegan: Boolean!
   vegetarian: Boolean!
@@ -66,8 +66,8 @@ type RecipePreferences {
 
 input RecipePreferencesInput {
   cookingTime: Int!
-  dairy: Boolean!
-  gluten: Boolean!
+  dairyfree: Boolean!
+  glutenfree: Boolean!
   vegan: Boolean!
   vegetarian: Boolean!
 }

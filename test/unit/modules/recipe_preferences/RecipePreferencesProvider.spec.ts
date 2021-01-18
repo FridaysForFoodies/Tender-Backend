@@ -32,8 +32,8 @@ describe("Get Recipe Preferences from Database", () => {
             properties: {
               vegan: mock_recipePreferences.vegan,
               vegetarian: mock_recipePreferences.vegetarian,
-              gluten: mock_recipePreferences.gluten,
-              dairy: mock_recipePreferences.dairy,
+              glutenfree: mock_recipePreferences.glutenfree,
+              dairyfree: mock_recipePreferences.dairyfree,
               cookingTime: mock_recipePreferences.cookingTime,
             },
           },
