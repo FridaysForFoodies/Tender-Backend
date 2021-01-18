@@ -171,7 +171,7 @@ describe("Add a recipe to favourites", () => {
       new DatabaseMock({ closeMock: closeMock })
     );
 
-    await recipeProvider.findRecipe("");
+    await recipeProvider.addToFavourites("", "");
 
     expect(closeMock.mock.calls).toHaveLength(1);
   });
