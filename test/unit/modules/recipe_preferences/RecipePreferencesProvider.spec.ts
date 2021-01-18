@@ -28,15 +28,11 @@ describe("Get Recipe Preferences from Database", () => {
     const runMock = jest.fn().mockResolvedValue(
       mockResult([
         {
-          prefs: {
-            properties: {
-              vegan: mock_recipePreferences.vegan,
-              vegetarian: mock_recipePreferences.vegetarian,
-              glutenfree: mock_recipePreferences.glutenfree,
-              dairyfree: mock_recipePreferences.dairyfree,
-              cookingTime: mock_recipePreferences.cookingTime,
-            },
-          },
+          vegan: mock_recipePreferences.vegan,
+          vegetarian: mock_recipePreferences.vegetarian,
+          glutenfree: mock_recipePreferences.glutenfree,
+          lactosefree: mock_recipePreferences.lactosefree,
+          cookingTime: mock_recipePreferences.cookingTime,
         },
       ])
     );
