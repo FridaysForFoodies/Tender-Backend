@@ -22,10 +22,12 @@ type InstructionStep {
 }
 
 type Mutation {
+  addRecipeToFavourites(recipeId: String!): Recipe
   setRecipePreferencesForUser(preferences: RecipePreferencesInput!): RecipePreferences!
 }
 
 type Query {
+  findFavouriteRecipes: [Recipe!]!
   findRecipe(recipeId: String!): Recipe
   findTags(skip: Int = 0, take: Int = 5): [Tag!]!
   generateUser: User!

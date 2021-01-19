@@ -1,4 +1,4 @@
-import { Arg, Args, Query, Resolver } from "type-graphql";
+import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
 import { Inject } from "typedi";
 import { IRecipeProvider, RECIPE_PROVIDER } from "./RecipeProvider";
 import { Recipe } from "../../model/Recipe";
@@ -30,5 +30,18 @@ export class RecipeResolver {
     @Arg("recipeId") recipeId: string
   ): Promise<Recipe> {
     return this.recipeProvider.findRecipe(recipeId);
+  }
+
+  @Mutation(() => Recipe, { nullable: true })
+  async addRecipeToFavourites(
+    @Arg("recipeId") recipeId: string,
+    @CurrentUser() user: User
+  ): Promise<Recipe> {
+    return this.recipeProvider.addToFavourites(recipeId, user.uuid);
+  }
+
+  @Query(() => [Recipe])
+  async findFavouriteRecipes(@CurrentUser() user: User): Promise<Recipe[]> {
+    return this.recipeProvider.findFavouriteRecipes(user.uuid);
   }
 }
