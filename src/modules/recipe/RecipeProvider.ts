@@ -27,6 +27,9 @@ export interface IRecipeProvider {
     preferencesInclude: [string],
     preferencesExclude: [string]
   ): Promise<Recipe[]>;
+  findRecipe(recipeId: string): Promise<Recipe>;
+  addToFavourites(recipeId: string, userId: string): Promise<Recipe>;
+  findFavouriteRecipes(userId: string): Promise<Recipe[]>;
 }
 
 @Service(RECIPE_PROVIDER)
@@ -260,6 +263,89 @@ export class RecipeProvider implements IRecipeProvider {
       }
 
       return recipes;
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      await session.close();
+    }
+  }
+
+  async findRecipe(recipeId: string): Promise<Recipe> {
+    const session = this.db.getSession();
+    try {
+      const result = await session.run(
+        `MATCH (recipe:Recipe {recipeId: $recipeId})<-[:USED_IN]-(ingredient:Ingredient) 
+        RETURN DISTINCT recipe, ingredient`,
+        {
+          recipeId: recipeId,
+        }
+      );
+
+      // No recipe found, return
+      if (result.records.length === 0) return null;
+
+      const recipe = RecipeProvider.recordToRecipe(result.records[0]);
+      recipe.ingredients = result.records.map((r) =>
+        IngredientProvider.recordToIngredient(r)
+      );
+
+      for (const ingredient of recipe.ingredients) {
+        const yieldResult = await session.run(
+          `MATCH (:Recipe {recipeId: $recipeId})<-[yield:USED_IN]-(ingredient:Ingredient {ingredientId: $ingredientId})
+          RETURN yield`,
+          {
+            recipeId: recipe.recipeId,
+            ingredientId: ingredient.id,
+          }
+        );
+        ingredient.yields = yieldResult.records.map((r) =>
+          RecipeProvider.recordToYield(r)
+        );
+      }
+
+      return recipe;
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      await session.close();
+    }
+  }
+
+  async addToFavourites(recipeId: string, userId: string): Promise<Recipe> {
+    const session = this.db.getSession();
+    try {
+      const result = await session.run(
+        `MATCH (recipe:Recipe {recipeId: $recipeId}), (user:User {uuid: $userId})
+        MERGE (user)-[:LIKED]->(recipe)
+        RETURN recipe`,
+        {
+          recipeId: recipeId,
+          userId: userId,
+        }
+      );
+
+      // Recipe not found, return null
+      if (result.records.length === 0) return null;
+
+      return RecipeProvider.recordToRecipe(result.records[0]);
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      await session.close();
+    }
+  }
+
+  async findFavouriteRecipes(userId: string): Promise<Recipe[]> {
+    const session = this.db.getSession();
+    try {
+      const result = await session.run(
+        `MATCH (:User {uuid: $userId})-[:LIKED]->(recipe:Recipe)
+        RETURN recipe`,
+        {
+          userId: userId,
+        }
+      );
+      return result.records.map((r) => RecipeProvider.recordToRecipe(r));
     } catch (e) {
       return Promise.reject(e);
     } finally {

@@ -17,7 +17,7 @@ export class Recipe {
   description: string;
 
   @Field(() => [Int])
-  yieldOptions: [number];
+  yieldOptions: number[];
 
   @Field(() => String)
   imagePath: string;
@@ -29,30 +29,30 @@ export class Recipe {
   duration: number;
 
   @Field(() => [InstructionStep], { nullable: true })
-  instructionSteps: [InstructionStep];
+  instructionSteps: InstructionStep[];
 
   @Field(() => [Ingredient], { nullable: true })
-  ingredients: [Ingredient];
+  ingredients: Ingredient[];
 
   @Field(() => [Ingredient], { nullable: true })
-  missingIngredients: [Ingredient];
+  missingIngredients: Ingredient[];
 
   @Field(() => [String], { nullable: true })
-  tags: [string]; //TODO Replace with explicit Type later
+  tags: string[]; //TODO Replace with explicit Type later
 
   constructor(
     recipeId: string,
     name: string,
     subtitle: string,
     description: string,
-    yieldOptions: [number],
+    yieldOptions: number[],
     imagePath: string,
     difficulty: number,
     duration: number,
-    instructionSteps: [InstructionStep],
-    ingredients: [Ingredient],
-    missingIngredients: [Ingredient],
-    tags: [string]
+    instructionSteps: InstructionStep[],
+    ingredients: Ingredient[],
+    missingIngredients: Ingredient[],
+    tags: string[]
   ) {
     this.recipeId = recipeId;
     this.name = name;

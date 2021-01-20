@@ -9,10 +9,10 @@ export class RecipePreferencesInput {
   vegetarian: boolean;
 
   @Field()
-  gluten: boolean;
+  glutenfree: boolean;
 
   @Field()
-  dairy: boolean;
+  lactosefree: boolean;
 
   @Field(() => Int)
   cookingTime: number;
@@ -20,14 +20,14 @@ export class RecipePreferencesInput {
   constructor(
     vegan: boolean,
     vegetarian: boolean,
-    gluten: boolean,
-    dairy: boolean,
+    glutenfree: boolean,
+    lactosefree: boolean,
     cookingTime: number
   ) {
     this.vegan = vegan;
     this.vegetarian = vegetarian;
-    this.gluten = gluten;
-    this.dairy = dairy;
+    this.glutenfree = glutenfree;
+    this.lactosefree = lactosefree;
     this.cookingTime = cookingTime;
   }
 }

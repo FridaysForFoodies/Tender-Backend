@@ -5,6 +5,10 @@ import { RecipePreferences } from "../../model/RecipePreferences";
 import { Record } from "neo4j-driver";
 
 export const RECIPE_PREFERENCES_PROVIDER = "recipe-preferences-provider";
+const VEGAN_TAG_ID = "5e88692dc44d94aaee373161";
+const VEGETARIAN_TAG_ID = "5e88692fc44d94aaee3733dd";
+const GLUTENFREE_TAG_ID = "5e88699cf83168ab027a9889";
+const LACTOSEFREE_TAG_ID = "5e886a3efcc163ab0e45f6cc";
 
 export interface IRecipePreferencesProvider {
   getRecipePreferences(user: User): Promise<RecipePreferences>;
@@ -22,10 +26,41 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        "MATCH (user:User { uuid: $userId }) \n" +
-          "MATCH (user)-[:HAS_PREF]->(prefs) RETURN prefs",
+        `MATCH (user:User { uuid: $userId }) 
+MATCH (user)<-[:HAS_PREF]-(prefs) 
+WITH prefs, user
+
+CALL {
+  WITH user
+  MATCH (user)<-[pref:IS_PREF]-(tag:Tag { tagId: $veganTagId })
+  RETURN pref.active as vegan
+}
+
+CALL {
+  WITH user
+  MATCH (user)<-[pref:IS_PREF]-(tag:Tag { tagId: $vegetarianTagId })
+  RETURN pref.active as vegetarian
+}
+
+CALL {
+  WITH user
+  MATCH (user)<-[pref:IS_PREF]-(tag:Tag { tagId: $glutenfreeTagId })
+  RETURN pref.active as glutenfree
+}
+
+CALL {
+  WITH user
+  MATCH (user)<-[pref:IS_PREF]-(tag:Tag { tagId: $lactosefreeTagId })
+  RETURN pref.active as lactosefree
+}
+
+RETURN prefs.cookingTime as cookingTime, vegan, vegetarian, glutenfree, lactosefree`,
         {
           userId: user.uuid,
+          veganTagId: VEGAN_TAG_ID,
+          vegetarianTagId: VEGETARIAN_TAG_ID,
+          glutenfreeTagId: GLUTENFREE_TAG_ID,
+          lactosefreeTagId: LACTOSEFREE_TAG_ID,
         }
       );
       return this._createRecipePrefsFromRecord(result.records, user);
@@ -43,18 +78,60 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
     const session = this.db.getSession();
     try {
       const result = await session.run(
-        "MATCH (user:User { uuid: $userId }) \n" +
-          "OPTIONAL MATCH (user)-[r:HAS_PREF]->() \n" +
-          "MERGE (prefs:RecipePrefs {dairy: $dairy, gluten: $gluten, vegetarian: $vegetarian, vegan: $vegan, cookingTime: $cookingTime}) \n" +
-          "CREATE (user)-[:HAS_PREF]->(prefs) \n" +
-          "DELETE r \n" +
-          "RETURN prefs",
+        `MATCH (user:User { uuid: $userId }) \n
+
+MERGE (user)<-[r:HAS_PREF]-(prefs:RecipePrefs) 
+ON MATCH SET prefs.cookingTime = $cookingTime
+ON CREATE SET prefs.cookingTime = $cookingTime
+WITH prefs, user
+
+CALL {
+  WITH user
+  MATCH (tag:Tag { tagId: $veganTagId })
+  MERGE (user)<-[pref:IS_PREF]-(tag) 
+  ON MATCH SET pref.active = $vegan
+  ON CREATE SET pref.active = $vegan
+  RETURN pref.active as vegan
+}
+
+CALL {
+  WITH user
+  MATCH (tag:Tag { tagId: $vegetarianTagId })
+  MERGE (user)<-[pref:IS_PREF]-(tag) 
+  ON MATCH SET pref.active = $vegetarian
+  ON CREATE SET pref.active = $vegetarian
+  RETURN pref.active as vegetarian
+}
+
+CALL {
+  WITH user
+  MATCH (tag:Tag { tagId: $glutenfreeTagId })
+  MERGE (user)<-[pref:IS_PREF]-(tag) 
+  ON MATCH SET pref.active = $glutenfree
+  ON CREATE SET pref.active = $glutenfree
+  RETURN pref.active as glutenfree
+}
+
+CALL {
+  WITH user
+  MATCH (tag:Tag { tagId: $lactosefreeTagId })
+  MERGE (user)<-[pref:IS_PREF]-(tag) 
+  ON MATCH SET pref.active = $lactosefree
+  ON CREATE SET pref.active = $lactosefree
+  RETURN pref.active as lactosefree
+}
+
+RETURN prefs.cookingTime as cookingTime, vegan, vegetarian, glutenfree, lactosefree`,
         {
           userId: user.uuid,
+          veganTagId: VEGAN_TAG_ID,
+          vegetarianTagId: VEGETARIAN_TAG_ID,
+          glutenfreeTagId: GLUTENFREE_TAG_ID,
+          lactosefreeTagId: LACTOSEFREE_TAG_ID,
           vegan: pref.vegan,
           vegetarian: pref.vegetarian,
-          gluten: pref.gluten,
-          dairy: pref.dairy,
+          glutenfree: pref.glutenfree,
+          lactosefree: pref.lactosefree,
           cookingTime: pref.cookingTime,
         }
       );
@@ -72,14 +149,13 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
     user: User
   ): RecipePreferences {
     const [prefs] = records.map((record) => {
-      const properties = record.get("prefs").properties;
       return new RecipePreferences(
         user,
-        properties.vegan,
-        properties.vegetarian,
-        properties.gluten,
-        properties.dairy,
-        properties.cookingTime
+        record.get("vegan"),
+        record.get("vegetarian"),
+        record.get("glutenfree"),
+        record.get("lactosefree"),
+        record.get("cookingTime")
       );
     });
 

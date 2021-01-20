@@ -18,14 +18,17 @@ type Ingredient {
 type InstructionStep {
   imageCaption: String
   imagePath: String
-  instruction: String!
+  instructions: String!
 }
 
 type Mutation {
+  addRecipeToFavourites(recipeId: String!): Recipe
   setRecipePreferencesForUser(preferences: RecipePreferencesInput!): RecipePreferences!
 }
 
 type Query {
+  findFavouriteRecipes: [Recipe!]!
+  findRecipe(recipeId: String!): Recipe
   findTags(skip: Int = 0, take: Int = 5): [Tag!]!
   generateUser: User!
   ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
@@ -56,8 +59,8 @@ type Recipe {
 
 type RecipePreferences {
   cookingTime: Int!
-  dairy: Boolean!
-  gluten: Boolean!
+  glutenfree: Boolean!
+  lactosefree: Boolean!
   user: User!
   vegan: Boolean!
   vegetarian: Boolean!
@@ -65,8 +68,8 @@ type RecipePreferences {
 
 input RecipePreferencesInput {
   cookingTime: Int!
-  dairy: Boolean!
-  gluten: Boolean!
+  glutenfree: Boolean!
+  lactosefree: Boolean!
   vegan: Boolean!
   vegetarian: Boolean!
 }
@@ -91,5 +94,5 @@ type User {
 type Yield {
   amount: Float!
   unit: String!
-  yield: Int!
+  yields: Int!
 }

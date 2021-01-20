@@ -20,7 +20,7 @@ export class IngredientProvider implements IIngredientProvider {
       record.get("ingredient").properties.ingredientId,
       record.get("ingredient").properties.name,
       record.get("ingredient").properties.imagePath,
-      (record.get("ingredient").properties.searchCount?.toInt() || 0)
+      record.get("ingredient").properties.searchCount?.toInt() || 0
     );
   }
 
@@ -29,8 +29,8 @@ export class IngredientProvider implements IIngredientProvider {
       record.get("ingredient").properties.ingredientId,
       record.get("ingredient").properties.name,
       record.get("ingredient").properties.imagePath,
-      (record.get("relation").properties.searchCount?.toInt() || 0)
-    )
+      record.get("relation").properties.searchCount?.toInt() || 0
+    );
   }
 
   async getAllWhereNameContains(
@@ -79,7 +79,10 @@ export class IngredientProvider implements IIngredientProvider {
     }
   }
 
-  async getPersonalCommon(count: number, userId: string): Promise<Ingredient[]> {
+  async getPersonalCommon(
+    count: number,
+    userId: string
+  ): Promise<Ingredient[]> {
     const session = this.db.getSession();
     try {
       const result = await session.run(
