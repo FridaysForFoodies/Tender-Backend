@@ -17,7 +17,7 @@ beforeAll(() => {
   ];
 });
 
-describe("Get Recipe Prefernces from Database", () => {
+describe("Get Recipe Tags from Database", () => {
   let tagProvider: TagProvider;
 
   beforeEach(() => {
