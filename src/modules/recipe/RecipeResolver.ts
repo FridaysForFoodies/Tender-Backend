@@ -17,18 +17,17 @@ export class RecipeResolver {
     @CurrentUser() user: User,
     @Args() { take, skip, searchOptions }: SearchRecipesArgs
   ): Promise<Recipe[]> {
-    return this.recipeProvider._mock_getRecipes(
+    return this.recipeProvider.getRecipes(
       user,
       take,
       skip,
-      searchOptions.ingredients
+      searchOptions.ingredients,
+      searchOptions.tags
     );
   }
 
   @Query(() => Recipe, { nullable: true })
-  async findRecipe(
-    @Arg("recipeId") recipeId: string
-  ): Promise<Recipe> {
+  async findRecipe(@Arg("recipeId") recipeId: string): Promise<Recipe> {
     return this.recipeProvider.findRecipe(recipeId);
   }
 

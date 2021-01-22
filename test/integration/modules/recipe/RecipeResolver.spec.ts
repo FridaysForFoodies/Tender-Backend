@@ -1,7 +1,10 @@
 import testServer, { loadConfig } from "../../../__utils/testServer";
 import { Container } from "typedi";
 import { DATABASE, IDatabase } from "../../../../src/Database";
-import { USER_PROVIDER, UserProvider } from "../../../../src/modules/user/UserProvider";
+import {
+  USER_PROVIDER,
+  UserProvider,
+} from "../../../../src/modules/user/UserProvider";
 
 const TEST_RECIPE_ID = "5e886949c44d94aaee375a6e";
 const TEST_INVALID_RECIPE_ID = "0022e730-10f8-460b-95e6-037d65940eaf";
@@ -53,8 +56,9 @@ describe("QUERY find recipe by ID", () => {
   it("should return the recipe with the specified ID", async () => {
     const result = await query({ query: findRecipeQuery });
 
-    expect(result.data.findRecipe.ID.toLowerCase())
-      .toMatch(TEST_RECIPE_ID.toLowerCase());
+    expect(result.data.findRecipe.ID.toLowerCase()).toMatch(
+      TEST_RECIPE_ID.toLowerCase()
+    );
   });
 
   it("should return null for invalid recipe ID", async () => {
@@ -74,9 +78,9 @@ describe("MUTATION add recipe to favourites", () => {
     const server = await testServer({
       context() {
         return {
-          user: mockUser
+          user: mockUser,
         };
-      }
+      },
     });
     mutation = server.mutate;
   });
@@ -84,12 +88,15 @@ describe("MUTATION add recipe to favourites", () => {
   it("should return the recipe with the specified ID", async () => {
     const result = await mutation({ query: addRecipeToFavouritesQuery });
 
-    expect(result.data.addRecipeToFavourites.ID.toLowerCase())
-      .toMatch(TEST_RECIPE_ID.toLowerCase());
+    expect(result.data.addRecipeToFavourites.ID.toLowerCase()).toMatch(
+      TEST_RECIPE_ID.toLowerCase()
+    );
   });
 
   it("should return null for invalid recipe ID", async () => {
-    const result = await mutation({ query: addRecipeToFavouritesInvalidIDQuery });
+    const result = await mutation({
+      query: addRecipeToFavouritesInvalidIDQuery,
+    });
 
     expect(result.data.addRecipeToFavourites).toBeNull();
   });
@@ -105,9 +112,9 @@ describe("QUERY find favourite recipes", () => {
     const server = await testServer({
       context() {
         return {
-          user: mockUser
+          user: mockUser,
         };
-      }
+      },
     });
     query = server.query;
   });
@@ -115,7 +122,8 @@ describe("QUERY find favourite recipes", () => {
   it("should return a list of favourite recipes", async () => {
     const result = await query({ query: findFavouriteRecipesQuery });
 
-    result.data.findFavouriteRecipes.forEach(r =>
-      expect(r.ID.toLowerCase()).toMatch(TEST_RECIPE_ID.toLowerCase()));
+    result.data.findFavouriteRecipes.forEach((r) =>
+      expect(r.ID.toLowerCase()).toMatch(TEST_RECIPE_ID.toLowerCase())
+    );
   });
 });

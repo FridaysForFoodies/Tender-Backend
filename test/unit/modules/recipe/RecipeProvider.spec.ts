@@ -9,21 +9,9 @@ import { RecipeProvider } from "../../../../src/modules/recipe/RecipeProvider";
 
 function generateRandomYields(): Yield[] {
   return [
-    new Yield(
-      faker.random.number(),
-      faker.random.alpha(),
-      2
-    ),
-    new Yield(
-      faker.random.number(),
-      faker.random.alpha(),
-      3
-    ),
-    new Yield(
-      faker.random.number(),
-      faker.random.alpha(),
-      4
-    ),
+    new Yield(faker.random.number(), faker.random.alpha(), 2),
+    new Yield(faker.random.number(), faker.random.alpha(), 3),
+    new Yield(faker.random.number(), faker.random.alpha(), 4),
   ];
 }
 
@@ -40,17 +28,19 @@ function generateRandomIngredient(yields: Yield[]): Ingredient {
 function generateRandomRecipe(yields?): Recipe {
   const instructions = [];
   for (let i = 0; i < 6; ++i) {
-    instructions.push(new InstructionStep(
-      faker.random.words(),
-      faker.system.filePath(),
-      faker.random.words()
-    ));
+    instructions.push(
+      new InstructionStep(
+        faker.random.words(),
+        faker.system.filePath(),
+        faker.random.words()
+      )
+    );
   }
 
   const ingredients = [];
   if (yields) {
     for (let i = 0; i < 10; ++i) {
-      ingredients.push(generateRandomIngredient(yields))
+      ingredients.push(generateRandomIngredient(yields));
     }
   }
 
@@ -59,7 +49,7 @@ function generateRandomRecipe(yields?): Recipe {
     faker.random.words(),
     faker.random.words(),
     faker.random.words(),
-    yields?.map(y => y.yields),
+    yields?.map((y) => y.yields),
     faker.system.filePath(),
     faker.random.number(3),
     faker.random.number(),
@@ -85,37 +75,39 @@ function mockRecipeWithIngredientsResult(recipe: Recipe): Result {
           difficulty: int(recipe.difficulty),
           duration: int(recipe.duration),
           steps: JSON.stringify(recipe.instructionSteps),
-        }
+        },
       },
       ingredient: {
         properties: {
           ingredientId: ingredient.id,
           name: ingredient.name,
           imagePath: ingredient.imagePath,
-          searchCount: int(ingredient.searchCount)
-        }
-      }
+          searchCount: int(ingredient.searchCount),
+        },
+      },
     });
   }
   return mockResult(records);
 }
 
 function mockRecipeResult(recipe: Recipe): Result {
-  return mockResult([{
-    recipe: {
-      properties: {
-        recipeId: recipe.recipeId,
-        name: recipe.name,
-        subtitle: recipe.subtitle,
-        description: recipe.description,
-        yieldOptions: JSON.stringify(recipe.yieldOptions),
-        imagePath: recipe.imagePath,
-        difficulty: int(recipe.difficulty),
-        duration: int(recipe.duration),
-        steps: JSON.stringify(recipe.instructionSteps),
-      }
-    }
-  }]);
+  return mockResult([
+    {
+      recipe: {
+        properties: {
+          recipeId: recipe.recipeId,
+          name: recipe.name,
+          subtitle: recipe.subtitle,
+          description: recipe.description,
+          yieldOptions: JSON.stringify(recipe.yieldOptions),
+          imagePath: recipe.imagePath,
+          difficulty: int(recipe.difficulty),
+          duration: int(recipe.duration),
+          steps: JSON.stringify(recipe.instructionSteps),
+        },
+      },
+    },
+  ]);
 }
 
 function mockYieldResult(yields: Yield[]): Result {
@@ -127,8 +119,8 @@ function mockYieldResult(yields: Yield[]): Result {
           amount: _yield.amount,
           unit: _yield.unit,
           yields: _yield.yields,
-        }
-      }
+        },
+      },
     });
   }
 
@@ -144,7 +136,8 @@ describe("Find a recipe by its ID", () => {
     const yields = generateRandomYields();
     const recipe = generateRandomRecipe(yields);
 
-    const runMock = jest.fn()
+    const runMock = jest
+      .fn()
       .mockResolvedValueOnce(mockRecipeWithIngredientsResult(recipe))
       .mockResolvedValue(mockYieldResult(yields));
     const recipeProvider = new RecipeProvider(

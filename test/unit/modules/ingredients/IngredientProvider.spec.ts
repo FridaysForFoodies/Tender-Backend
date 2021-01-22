@@ -21,10 +21,10 @@ function mockIngredientResult(ingredient: Ingredient): Result {
           ingredientId: ingredient.id,
           name: ingredient.name,
           imagePath: ingredient.imagePath,
-          searchCount: int(ingredient.searchCount)
-        }
-      }
-    }
+          searchCount: int(ingredient.searchCount),
+        },
+      },
+    },
   ]);
 }
 
@@ -38,15 +38,15 @@ function mockPersonalIngredientResult(
         properties: {
           ingredientId: ingredient.id,
           name: ingredient.name,
-          imagePath: ingredient.imagePath
-        }
+          imagePath: ingredient.imagePath,
+        },
       },
       relation: {
         properties: {
-          searchCount: int(personalSearchCount)
-        }
-      }
-    }
+          searchCount: int(personalSearchCount),
+        },
+      },
+    },
   ]);
 }
 
@@ -58,7 +58,9 @@ describe("All ingredients where name contains", () => {
   it("should return database result mapped to ingredient objects", async () => {
     const ingredient = generateRandomIngredient();
 
-    const runMock = jest.fn().mockResolvedValue(mockIngredientResult(ingredient));
+    const runMock = jest
+      .fn()
+      .mockResolvedValue(mockIngredientResult(ingredient));
     const ingredientProvider = new IngredientProvider(
       new DatabaseMock({ runMock: runMock })
     );
@@ -84,7 +86,9 @@ describe("Popular ingredients", () => {
   it("should return database result mapped to ingredient objects", async () => {
     const ingredient = generateRandomIngredient();
 
-    const runMock = jest.fn().mockResolvedValue(mockIngredientResult(ingredient));
+    const runMock = jest
+      .fn()
+      .mockResolvedValue(mockIngredientResult(ingredient));
     const ingredientProvider = new IngredientProvider(
       new DatabaseMock({ runMock: runMock })
     );
@@ -111,15 +115,20 @@ describe("Personal common ingredients", () => {
     const ingredient = generateRandomIngredient();
     const personalSearchCount = faker.random.number();
 
-    const runMock = jest.fn().mockResolvedValue(
-      mockPersonalIngredientResult(ingredient, personalSearchCount)
-    );
+    const runMock = jest
+      .fn()
+      .mockResolvedValue(
+        mockPersonalIngredientResult(ingredient, personalSearchCount)
+      );
     const ingredientProvider = new IngredientProvider(
       new DatabaseMock({ runMock: runMock })
     );
 
     ingredient.searchCount = personalSearchCount;
-    const result = await ingredientProvider.getPersonalCommon(1, faker.random.uuid());
+    const result = await ingredientProvider.getPersonalCommon(
+      1,
+      faker.random.uuid()
+    );
 
     expect(result).toMatchObject([ingredient]);
   });
