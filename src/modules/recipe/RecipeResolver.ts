@@ -22,9 +22,7 @@ export class RecipeResolver {
       take,
       skip,
       searchOptions.ingredients,
-      searchOptions.tags,
-      searchOptions.preferenceTagsInclude,
-      searchOptions.preferenceTagsExclude
+      searchOptions.tags
     );
   }
 

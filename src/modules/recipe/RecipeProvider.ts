@@ -23,9 +23,7 @@ export interface IRecipeProvider {
     take: number,
     skip: number,
     availableIngredients: [string],
-    swipeTagsInclude: [string],
-    preferencesInclude: [string],
-    preferencesExclude: [string]
+    swipeTagsInclude: [string]
   ): Promise<Recipe[]>;
   findRecipe(recipeId: string): Promise<Recipe>;
   addToFavourites(recipeId: string, userId: string): Promise<Recipe>;
@@ -78,9 +76,7 @@ export class RecipeProvider implements IRecipeProvider {
     take: number,
     skip: number,
     availableIngredients: [string],
-    swipeTagsInclude: [string],
-    preferencesInclude: [string],
-    preferencesExclude: [string]
+    swipeTagsInclude: [string]
   ): Promise<Recipe[]> {
     const session = this.db.getSession();
     try {
@@ -94,19 +90,17 @@ export class RecipeProvider implements IRecipeProvider {
         // 4. The ranks of all recipes are sorted descending. The highest ranked recipes should be the best fits.
       `;
 
-      if (preferencesInclude.length > 0) {
+      if (user.uuid !== undefined) {
         query += `
           // Stage 1: Preferences
-          WITH $preferencesInclude AS preferencesInclude, $preferencesExclude AS preferencesExclude
-          MATCH (r:Recipe)<-[:APPLIES]-(t:Tag)
-          WHERE t.tagId IN preferencesInclude AND NOT t.tagId IN preferencesExclude
+          WITH '$uuid' AS uuid
+          MATCH (r:Recipe)<-[:APPLIES]-(t:Tag)-[p:IS_PREF]->(u)
+          WHERE u.uuid = uuid AND p.active = true
         `;
       } else {
         query += `
           // Stage 1: Preferences
-          WITH $preferencesExclude AS preferencesExclude
-          MATCH (r:Recipe)<-[:APPLIES]-(t:Tag)
-          WHERE NOT t.tagId IN preferencesExclude
+          MATCH (r:Recipe)
         `;
       }
 
@@ -151,8 +145,7 @@ export class RecipeProvider implements IRecipeProvider {
       `;
 
       const result = await session.run(query, {
-        preferencesInclude: preferencesInclude,
-        preferencesExclude: preferencesExclude,
+        uuid: user.uuid,
         ingredientIds: availableIngredients,
         tagIds: swipeTagsInclude,
         limit: take,

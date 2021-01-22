@@ -76,8 +76,6 @@ input RecipePreferencesInput {
 
 input SearchOptionsInput {
   ingredients: [String!]!
-  preferenceTagsExclude: [String!]!
-  preferenceTagsInclude: [String!]!
   tags: [String!]!
 }
 

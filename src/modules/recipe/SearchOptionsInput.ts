@@ -7,10 +7,4 @@ export class SearchOptionsInput {
 
   @Field(() => [String])
   tags: [string];
-
-  @Field(() => [String])
-  preferenceTagsInclude: [string];
-
-  @Field(() => [String])
-  preferenceTagsExclude: [string];
 }
