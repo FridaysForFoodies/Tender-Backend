@@ -93,7 +93,7 @@ export class RecipeProvider implements IRecipeProvider {
       if (user.uuid !== undefined) {
         query += `
           // Stage 1: Preferences
-          WITH '$uuid' AS uuid
+          WITH '${user.uuid}' AS uuid
           MATCH (r:Recipe)<-[:APPLIES]-(t:Tag)-[p:IS_PREF]->(u)
           WHERE u.uuid = uuid AND p.active = true
         `;
@@ -106,7 +106,7 @@ export class RecipeProvider implements IRecipeProvider {
 
       query += `
         // Stage 2: Ingredients
-        WITH $ingredientIds AS ingredientIds, r AS r
+        WITH ["${availableIngredients.join('", "')}"] AS ingredientIds, r AS r
         UNWIND ingredientIds AS ingredientId
         MATCH (r:Recipe)
         WHERE EXISTS {
@@ -117,7 +117,9 @@ export class RecipeProvider implements IRecipeProvider {
         UNWIND recipes AS recipe
         
         // Stage 3: Tags/Swipes
-        WITH recipe AS r, count(recipe) AS rank, $tagIds AS tagIds
+        WITH recipe AS r, count(recipe) AS rank, ["${swipeTagsInclude.join(
+          '", "'
+        )}"] AS tagIds
         UNWIND tagIds AS tagId
         CALL {
           // Increase the rank when the tag matches
@@ -141,16 +143,10 @@ export class RecipeProvider implements IRecipeProvider {
         WITH recipe, sum(rank) AS rank
         RETURN recipe, rank
         ORDER BY rank DESC
-        SKIP toInteger($skip) LIMIT toInteger($limit)
+        SKIP ${skip} LIMIT ${take}
       `;
 
-      const result = await session.run(query, {
-        uuid: user.uuid,
-        ingredientIds: availableIngredients,
-        tagIds: swipeTagsInclude,
-        limit: take,
-        skip: skip,
-      });
+      const result = await session.run(query);
 
       const recipes: Recipe[] = result.records.map((r) =>
         RecipeProvider.recordToRecipe(r)
