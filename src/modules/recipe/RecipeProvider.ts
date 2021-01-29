@@ -94,8 +94,11 @@ export class RecipeProvider implements IRecipeProvider {
         query += `
           // Stage 1: Preferences
           WITH '${user.uuid}' AS uuid
-          MATCH (r:Recipe)<-[:APPLIES]-(t:Tag)-[p:IS_PREF]->(u)
+          MATCH (t:Tag)-[p:IS_PREF]->(u:User)
           WHERE u.uuid = uuid AND p.active = true
+          WITH t AS t, count(t) = 0 AS empty
+          CALL apoc.do.when(empty, 'MATCH (r:Recipe) RETURN r AS nodes', 'MATCH (r:Recipe)<-[:APPLIES]-(t:Tag) RETURN r AS nodes') YIELD value
+          WITH DISTINCT value.nodes AS r
         `;
       } else {
         query += `
@@ -115,7 +118,10 @@ export class RecipeProvider implements IRecipeProvider {
         }
         WITH collect(r) AS recipes
         UNWIND recipes AS recipe
-        
+        `;
+
+      if (swipeTagsInclude.length > 0) {
+        query += `
         // Stage 3: Tags/Swipes
         WITH recipe AS r, count(recipe) AS rank, ["${swipeTagsInclude.join(
           '", "'
@@ -136,6 +142,15 @@ export class RecipeProvider implements IRecipeProvider {
           WHERE t.tagId <> tagId
           RETURN r AS recipe, rank / 4 AS rankTagged
         }
+        `;
+      } else {
+        query += `
+        // Stage 3: Tags/Swipes
+        WITH recipe, count(recipe) AS rankTagged
+        `;
+      }
+
+      query += `
         WITH collect(recipe) AS recipes, rankTagged AS rank
         UNWIND recipes AS recipe
         
