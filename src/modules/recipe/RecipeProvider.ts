@@ -96,8 +96,8 @@ export class RecipeProvider implements IRecipeProvider {
           WITH '${user.uuid}' AS uuid
           MATCH (t:Tag)-[p:IS_PREF]->(u:User)
           WHERE u.uuid = uuid AND p.active = true
-          WITH t AS t, count(t) = 0 AS empty
-          CALL apoc.do.when(empty, 'MATCH (r:Recipe) RETURN r AS nodes', 'MATCH (r:Recipe)<-[:APPLIES]-(t:Tag) RETURN r AS nodes') YIELD value
+          WITH collect(t) AS t, count(t) AS amount
+          CALL apoc.do.when(amount = 0, 'MATCH (r:Recipe) RETURN r AS nodes', 'UNWIND $t AS tag MATCH (r:Recipe)<-[:APPLIES]-(tag:Tag) RETURN r AS nodes', {t: t}) YIELD value
           WITH DISTINCT value.nodes AS r
         `;
       } else {
