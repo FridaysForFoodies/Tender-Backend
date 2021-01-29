@@ -80,6 +80,18 @@ export class RecipeProvider implements IRecipeProvider {
   ): Promise<Recipe[]> {
     const session = this.db.getSession();
     try {
+      // Add available ingredients to most used search terms
+      await session.run(`
+        WITH ["${availableIngredients.join('", "')}"] AS ingredientIds
+        UNWIND ingredientIds AS iId
+        MATCH (ingredient:Ingredient {ingredientId: iId}), (user:User {uuid: $uuid})
+        MERGE (ingredient)<-[relation:SEARCHED_FOR]-(user)
+        ON CREATE SET relation.searchCount = 1
+        ON MATCH SET relation.searchCount = relation.searchCount + 1
+        SET ingredient.searchCount = ingredient.searchCount + 1`,
+        {uuid: user.uuid}
+      );
+
       let query = `
         // ranking-algorithm-v1
         // This algorithm consists of four stages.
