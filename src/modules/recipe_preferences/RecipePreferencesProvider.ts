@@ -3,6 +3,7 @@ import { DATABASE, IDatabase } from "../../Database";
 import { User } from "../../model/User";
 import { RecipePreferences } from "../../model/RecipePreferences";
 import { Record } from "neo4j-driver";
+import InputValidater from "../input_validation/InputValidater";
 
 export const RECIPE_PREFERENCES_PROVIDER = "recipe-preferences-provider";
 const VEGAN_TAG_ID = "5e88692dc44d94aaee373161";
@@ -23,6 +24,10 @@ export class RecipePreferencesProvider implements IRecipePreferencesProvider {
   constructor(@Inject(DATABASE) private readonly db: IDatabase) {}
 
   async getRecipePreferences(user: User): Promise<RecipePreferences> {
+    // Validate
+    if (!InputValidater.validateUserId(user.uuid))
+      throw new Error("Invalid userId");
+
     const session = this.db.getSession();
     try {
       const result = await session.run(
@@ -75,6 +80,10 @@ RETURN prefs.cookingTime as cookingTime, vegan, vegetarian, glutenfree, lactosef
     pref: RecipePreferences,
     user: User
   ): Promise<RecipePreferences> {
+    // Validate
+    if (!InputValidater.validateUserId(user.uuid))
+      throw new Error("Invalid userId");
+
     const session = this.db.getSession();
     try {
       const result = await session.run(
