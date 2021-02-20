@@ -10,7 +10,7 @@ let mock_recipePreferences: RecipePreferences;
 beforeAll(() => {
   faker.seed(1337);
 
-  user = new User("mock_uuid");
+  user = new User(faker.random.uuid());
   mock_recipePreferences = new RecipePreferences(
     user,
     faker.random.boolean(),

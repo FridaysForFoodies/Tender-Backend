@@ -65,7 +65,7 @@ describe("All ingredients where name contains", () => {
       new DatabaseMock({ runMock: runMock })
     );
 
-    const result = await ingredientProvider.getAllWhereNameContains("", 0);
+    const result = await ingredientProvider.getAllWhereNameContains("a", 0);
 
     expect(result).toMatchObject([ingredient]);
   });
@@ -76,7 +76,7 @@ describe("All ingredients where name contains", () => {
       new DatabaseMock({ closeMock: closeMock })
     );
 
-    await ingredientProvider.getAllWhereNameContains("", 0);
+    await ingredientProvider.getAllWhereNameContains("a", 0);
 
     expect(closeMock.mock.calls).toHaveLength(1);
   });
