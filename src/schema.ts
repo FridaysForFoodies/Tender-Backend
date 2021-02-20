@@ -17,7 +17,7 @@ export default async function createSchema(): Promise<GraphQLSchema> {
       TagResolver,
     ],
     emitSchemaFile: true,
-    validate: false,
+    validate: true,
     container: Container,
   });
 }
