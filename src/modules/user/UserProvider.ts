@@ -1,6 +1,7 @@
 import { Inject, Service } from "typedi";
 import { DATABASE, IDatabase } from "../../Database";
 import { User } from "../../model/User";
+import InputValidater from "../input_validation/InputValidater";
 
 export const USER_PROVIDER = "user-provider";
 
@@ -14,6 +15,9 @@ export class UserProvider implements IUserProvider {
   constructor(@Inject(DATABASE) private readonly db: IDatabase) {}
 
   async createUserWithUUID(uuid: string): Promise<User> {
+    // Validate
+    if (!InputValidater.validateUserId(uuid)) throw new Error("Invalid userId");
+
     const session = this.db.getSession();
     try {
       const result = await session.run(
@@ -35,6 +39,9 @@ export class UserProvider implements IUserProvider {
   }
 
   async getUserByUUID(uuid: string): Promise<User> {
+    // Validate
+    if (!InputValidater.validateUserId(uuid)) throw new Error("Invalid userId");
+
     const session = this.db.getSession();
     try {
       const result = await session.run(

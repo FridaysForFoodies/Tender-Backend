@@ -7,6 +7,7 @@ import { InstructionStep } from "../../model/InstructionStep";
 import { Ingredient } from "../../model/Ingredient";
 import { IngredientProvider } from "../ingredients/IngredientProvider";
 import { Yield } from "../../model/Yield";
+import InputValidater from "../input_validation/InputValidater";
 
 export const RECIPE_PROVIDER = "recipe-provider";
 
@@ -78,10 +79,19 @@ export class RecipeProvider implements IRecipeProvider {
     availableIngredients: [string],
     swipeTagsInclude: [string]
   ): Promise<Recipe[]> {
+    // Validate input
+    if (!InputValidater.validateUserId(user.uuid))
+      throw new Error("Invalid userId");
+    if (!InputValidater.validateHelloFreshIds(availableIngredients))
+      throw new Error("Invalid ingredient list");
+    if (!InputValidater.validateHelloFreshIds(swipeTagsInclude))
+      throw new Error("Invalid swipe-tags list");
+
     const session = this.db.getSession();
     try {
       // Add available ingredients to most used search terms
-      await session.run(`
+      await session.run(
+        `
         WITH ["${availableIngredients.join('", "')}"] AS ingredientIds
         UNWIND ingredientIds AS iId
         MATCH (ingredient:Ingredient {ingredientId: iId}), (user:User {uuid: $uuid})
@@ -89,7 +99,7 @@ export class RecipeProvider implements IRecipeProvider {
         ON CREATE SET relation.searchCount = 1
         ON MATCH SET relation.searchCount = relation.searchCount + 1
         SET ingredient.searchCount = ingredient.searchCount + 1`,
-        {uuid: user.uuid}
+        { uuid: user.uuid }
       );
 
       let query = `

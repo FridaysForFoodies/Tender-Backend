@@ -2,6 +2,7 @@ import { Ingredient } from "../../model/Ingredient";
 import { Inject, Service } from "typedi";
 import { DATABASE, IDatabase } from "../../Database";
 import { Record } from "neo4j-driver";
+import InputValidater from "../input_validation/InputValidater";
 
 export const INGREDIENT_PROVIDER = "ingredient-provider";
 
@@ -37,6 +38,10 @@ export class IngredientProvider implements IIngredientProvider {
     query: string,
     count: number
   ): Promise<Ingredient[]> {
+    // Validate
+    if (!InputValidater.validateUserInput(query))
+      throw new Error("Invalid user input");
+
     const session = this.db.getSession();
     try {
       const result = await session.run(
