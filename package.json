@@ -28,6 +28,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^15.4.0",
+    "graphql-depth-limit": "^1.1.0",
+    "helmet": "^4.4.1",
     "neo4j-driver": "^4.2.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
@@ -37,6 +39,7 @@
   "devDependencies": {
     "@types/express": "github:types/express",
     "@types/graphql": "^14.5.0",
+    "@types/graphql-depth-limit": "^1.1.2",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.10",
     "@typescript-eslint/eslint-plugin": "^4.8.2",

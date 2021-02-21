@@ -31,9 +31,9 @@ type Query {
   findRecipe(recipeId: String!): Recipe
   findTags(skip: Int = 0, take: Int = 5): [Tag!]!
   generateUser: User!
-  ingredientSuggestions(count: Float = 5, query: String!): [Ingredient!]
-  personalCommonIngredients(count: Float = 5): [Ingredient!]!
-  popularIngredients(count: Float = 5): [Ingredient!]!
+  ingredientSuggestions(count: Int = 5, query: String!): [Ingredient!]
+  personalCommonIngredients(count: Int = 5): [Ingredient!]!
+  popularIngredients(count: Int = 5): [Ingredient!]!
   recipePreferencesForUser: RecipePreferences!
   searchForRecipes(searchOptions: SearchOptionsInput!, skip: Int = 0, take: Int = 25): [Recipe!]!
 }
