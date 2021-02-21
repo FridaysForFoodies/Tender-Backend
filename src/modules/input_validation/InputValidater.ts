@@ -1,5 +1,5 @@
 export default class InputValidater {
-  private static readonly helloFreshIdRegex = /^[0-9,a-f]{24}$/;
+  private static readonly helloFreshIdRegex = /^[0-9a-f]{24}$/;
 
   private static readonly userIdRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
